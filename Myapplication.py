@@ -7,7 +7,7 @@ window.title("my android monitor")
 window.geometry("960x960")
 #color declaration 
 
-
+# Hi i am Yasser 
 # labels declaration 
 main_label = Label(window,text='welcome to our application',bg='green').pack()
 

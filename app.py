@@ -66,7 +66,7 @@ class AdbApp:
         self.performance_text = tk.Text(self.performance_frame, wrap=tk.WORD, font=('Courier', 12))
         self.performance_text.pack(fill=tk.BOTH, expand=True)
     
-    def start_performance(self):
+    def start_performance(self):tkinter
         if self.performance_thread is None or not self.performance_thread.is_alive():
             self.performance_thread = threading.Thread(target=self.monitor_performance)
             self.performance_thread.start()
