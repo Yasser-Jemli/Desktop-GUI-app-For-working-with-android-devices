@@ -76,22 +76,22 @@ b1.grid(row=1,column=1,rowspan=1,columnspan=1,sticky='nsew')
 # **********************************************************************************************
 
 b2=Button(window,text='CAN_Configuration : CAN-0')
-b2.grid(row=0,column=0,rowspan=1,columnspan=1,sticky='nsew') 
+b2.grid(row=0,column=0,rowspan=1,columnspan=1) 
 # ***********************************************************************************************
 # Button B3 : Configuration CAN-1
 # ***********************************************************************************************
 b3=Button(window,text='CAN_Configuration : CAN-1')
-b3.grid(row=1,column=0,rowspan=1,columnspan=1,sticky='nsew')
+b3.grid(row=1,column=0,rowspan=1,columnspan=1)
 # ***********************************************************************************************
 # Button for Create Volume + : Works via adb commands 
 # ***********************************************************************************************
 b4=Button(window, text='volume plus 1 +')
-b4.grid(row=2,column=0,rowspan=1,columnspan=1,sticky='nsew')
+b4.grid(row=2,column=0,rowspan=1,columnspan=1)
 # ***********************************************************************************************
 # Button for Create Volume - : Works via adb commands
 # ***********************************************************************************************
 b5=Button(window,text='volume minus 1 -') 
-b5.grid(row=3,column=0,rowspan=1,columnspan=1,sticky='nsew')
+b5.grid(row=3,column=0,rowspan=1,columnspan=1)
 # ***********************************************************************************************
 # Button forDisplay the profiles list availble in the connected android device 
 # ***********************************************************************************************
@@ -101,7 +101,7 @@ b6.grid(row=2,column=1, rowspan=1,columnspan=1,sticky='nsew')
 # Button for Create mute : works via adb commands
 # ***********************************************************************************************
 b6=Button(window,text='Mute')
-b6.grid(row=4,column=0, rowspan=1,columnspan=1,sticky='nsew')
+b6.grid(row=4,column=0, rowspan=1,columnspan=1)
 # ***********************************************************************************************
 # Button for Clear the terminal output 
 # ***********************************************************************************************
@@ -115,7 +115,7 @@ b8.grid(row=3,column=1, rowspan=1,columnspan=1,sticky='nsew')
 #************************************************************************************************
 # Button for stop Scrcpy 
 # ***********************************************************************************************
-b9=Button(window,text='Stop Scrcpy',command=start_scrcpy)
+b9=Button(window,text='Stop Scrcpy',command=stop_scrcpy)
 b9.grid(row=4,column=1, rowspan=1,columnspan=1,sticky='nsew')
 b9.config(state=DISABLED)
 # ************************************************************************************************
