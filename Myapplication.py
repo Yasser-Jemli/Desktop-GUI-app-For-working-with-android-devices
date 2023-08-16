@@ -3,7 +3,10 @@ import subprocess
 import threading
 
 window =Tk()
-
+# ************************** Application Layout & Widget ****************************************
+c=Canvas(window,bg='grey',height=150,width=150)
+c.grid(row=0,column=0,rowspan=10,columnspan=1,sticky='nsew')
+# ************************************************************************************************
 # ******* Create Terminal Output Area ************************************************************
 output_text = Text(window, wrap=WORD, font=('Courier', 12))
 output_text.grid(row=0,column=2,rowspan=2,columnspan=2,sticky='nsew')
@@ -44,6 +47,16 @@ def start_scrcpy():
         scrcpy_process = subprocess.Popen(["scrcpy"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         b8.config(state=DISABLED)
         b9.config(state=NORMAL)
+        scrcpy_process.communicate()  # Wait for the process to finish
+        return_code = scrcpy_process.returncode
+        if return_code == 0:
+            append_output(text='scrcpy is launched \n')  # Successful launch
+            b8.config(state=DISABLED)
+            b9.config(state=NORMAL)
+        else:
+            append_output(text='we are encounterd issues while try to launch scrcpy \n')  # Error encountered
+        b8.config(state=NORMAL)
+        b9.config(state=DISABLED)
 # **********************************************************************************************
 # Stop Scrcpy Function 
 # **********************************************************************************************
@@ -110,4 +123,5 @@ b9.grid(row=4,column=1, rowspan=1,columnspan=1,sticky='nsew')
 b10=Button(window,text='restart Scrcpy every 2s')
 b10.grid(row=5,column=1, rowspan=1,columnspan=1,sticky='nsew')
 # ***********************************************************************************************
+
 window.mainloop()
