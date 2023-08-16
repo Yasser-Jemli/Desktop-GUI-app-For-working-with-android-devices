@@ -117,6 +117,7 @@ b8.grid(row=3,column=1, rowspan=1,columnspan=1,sticky='nsew')
 # ***********************************************************************************************
 b9=Button(window,text='Stop Scrcpy',command=start_scrcpy)
 b9.grid(row=4,column=1, rowspan=1,columnspan=1,sticky='nsew')
+b9.config(state=DISABLED)
 # ************************************************************************************************
 # Button for Clear the terminal output 
 # ***********************************************************************************************
