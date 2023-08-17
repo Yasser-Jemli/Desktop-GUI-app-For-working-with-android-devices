@@ -7,7 +7,7 @@ customtkinter.set_appearance_mode("light")  # Modes: system (default), light, da
 customtkinter.set_default_color_theme("dark-blue")  # Themes: blue (default), dark-blue, green
 
 root = customtkinter.CTk(fg_color="grey")  # create CTk window like you do with the Tk window
-root.geometry("1024x1024")
+root.geometry("800x650")
 class ScrcpyController:
     def __init__(self, root):
         self.root = root
