@@ -6,6 +6,7 @@ from PIL import Image
 
 # customtkinter.set_appearance_mode("light")  # Modes: system (default), light, dark
 # customtkinter.set_default_color_theme("dark-blue")  # Themes: blue (default), dark-blue, green
+# modif
 
 root = customtkinter.CTk(fg_color="#4C4646")  # create CTk window like you do with the Tk window
 root.geometry("1024x592")
