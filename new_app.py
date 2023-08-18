@@ -56,15 +56,23 @@ class ScrcpyController:
 
     def run_volume_plus(self):
         try:
-            result = subprocess.Popen(["adb", "shell", "input" , "keyevent", "KEYCODE_VOLUME_UP"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-            output = result.stdout + result.stderr
-            self.append_output(output)
+            subprocess.Popen(["adb", "shell", "input" , "keyevent", "KEYCODE_VOLUME_UP"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            self.append_output(text=' Volume is increased with one step \n')
+          
         except Exception as e:
-            self.append_output(f"Eroor: {str(e)}\n")
+            self.append_output(f"Error: {str(e)}\n")
             
-    def volume_minus():
-        output = execute_command('adb shell ................')
-        append_output(output)
+    def volume_minus(self):
+        volume_minus_thread = threading.Thread(target=self.run_volume_minus)
+        volume_minus_thread.start()
+
+    def run_volume_minus(self):
+        try:
+            subprocess.Popen(["adb","shell","input","keyevent","KEYCODE_VOLUME_DOWN"], stdout=subprocess.PIPE, stderr=subprocess.PIPE , text=True)
+            self.append_output(text=' Volume is decresed with one step \n')
+        except Exception as e:
+            self.append_output(f"Error: {str(e)}\n")
+        
     def mute_unmute():
         output = execute_command('adb shell .................')
         append_output(output)
@@ -85,8 +93,11 @@ class ScrcpyController:
         self.b2 = customtkinter.CTkButton(self.root, text='profiles',command=self.list_profiles, border_color="dark")
         self.b2.grid(row=2, column=0, rowspan=1, columnspan=1,sticky='nsew')
 
-        self.b3 = customtkinter.CTkButton(master=self.root, text='Volume_UP',command=self.volume_plus, border_color="dark")
-        self.b3.grid(row=1, column=1, rowspan=1, columnspan=1,sticky='nsew')
+        self.b3 = customtkinter.CTkButton(master=self.root, text='VOLUME_UP',command=self.volume_plus, border_color="dark")
+        self.b3.grid(row=5, column=0, rowspan=1, columnspan=1,sticky='nsew')
+
+        self.b4 = customtkinter.CTkButton(master=self.root, text='VLUME_DOWN', command=self.volume_minus, border_color="dark")
+        self.b4.grid(row=6 , column=0, rowspan=1, columnspan=1 , sticky='nsew')
 
         # self.b3 = customtkinter.CTkButton(self.root, text='volume_minus',command=volume_minus, border_color="dark")
         # self.b3.grid(row=3, column=1, rowspan=1, columnspan=1,sticky='nsew')
@@ -94,7 +105,7 @@ class ScrcpyController:
 
     def create_output_terminal(self):
         self.output_text = customtkinter.CTkTextbox(master=self.root,font=('Courier', 12),border_color="dark")
-        self.output_text.grid(row=0, column=2, rowspan=4, columnspan=4, sticky='nsew')
+        self.output_text.grid(row=0, column=2, rowspan=8, columnspan=8, sticky='nsew')
 
     def append_output(self, text):
         self.output_text.insert("end", text)
