@@ -72,10 +72,16 @@ class ScrcpyController:
             self.append_output(text=' Volume is decresed with one step \n')
         except Exception as e:
             self.append_output(f"Error: {str(e)}\n")
-        
-    def mute_unmute():
-        output = execute_command('adb shell .................')
-        append_output(output)
+    def mute(self):
+        mute_thread = threading.Thread(target=self.run_mute)
+        mute_thread.start()
+
+    def run_mute(self):
+        try:
+            subprocess.Popen(["adb", "input","keyevent", "KEYCODE_MUTE"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            self.append_output(text='You pressed The mute Button')
+        except Exception as e:
+            self.append_output(f"Error: {str(e)}\n")
 
     def create_buttons(self):
         self.b8 = customtkinter.CTkButton(master=self.root, text="Start Scrcpy", command=self.start_scrcpy,border_color="dark")
@@ -98,6 +104,9 @@ class ScrcpyController:
 
         self.b4 = customtkinter.CTkButton(master=self.root, text='VLUME_DOWN', command=self.volume_minus, border_color="dark")
         self.b4.grid(row=6 , column=0, rowspan=1, columnspan=1 , sticky='nsew')
+        
+        self.b5 = customtkinter.CTkButton(master=self.root, text='Mute', command=self.mute, border_color="dark")
+        self.b5.grid(row=7 , column=0, rowspan=1, columnspan=1 , sticky='nsew')
 
         # self.b3 = customtkinter.CTkButton(self.root, text='volume_minus',command=volume_minus, border_color="dark")
         # self.b3.grid(row=3, column=1, rowspan=1, columnspan=1,sticky='nsew')
