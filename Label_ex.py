@@ -19,4 +19,7 @@ def button_event():
 tk_textbox.configure(yscrollcommand=ctk_textbox_scrollbar.set)
 button = customtkinter.CTkButton(master=frame, text="Button" , command=button_event)
 button.grid(padx=20,pady=10)
+
+label = customtkinter.CTkLabel(master=frame, text="LABEL",width=120,height=25,fg_color=("white","gray75"),corner_radius=8)
+label.grid(padx=20,pady=10)
 app.mainloop()
