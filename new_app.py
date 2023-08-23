@@ -15,7 +15,6 @@ class ScrcpyController:
     def __init__(self, root):
         self.root = root
         self.root.title("My Android Controller")
-
         self.scrcpy_process = None
         self.create_frames()
         self.create_output_terminal()
@@ -47,7 +46,6 @@ class ScrcpyController:
             stdout, stderr = self.run_devices.communicate()
             self.append_output(stdout)
             self.append_output(stderr)
-
             self.run_devices.wait()
         except Exception as e:
             self.append_output(f"Error: {str(e)}\n")
@@ -63,8 +61,7 @@ class ScrcpyController:
             self.append_output(text=' Volume Key "+" is pressed \n')
             self.append_output(stdout)
             self.append_output(stderr)
-            self.run_volume_pluss.wait()
-          
+            self.run_volume_pluss.wait()      
         except Exception as e:
             self.append_output(f"Error: {str(e)}\n")
             
@@ -82,6 +79,7 @@ class ScrcpyController:
             self.run_volume_minuss.wait()
         except Exception as e:
             self.append_output(f"Error: {str(e)}\n")
+    
     def mute(self):
         mute_thread = threading.Thread(target=self.run_mute)
         mute_thread.start()
@@ -94,54 +92,54 @@ class ScrcpyController:
             self.append_output(stdout)
             self.append_output(stderr)
             self.run_mutee.wait()
-
         except Exception as e:
             self.append_output(f"Error: {str(e)}\n")
 
     def create_frames(self):
         # frame for the top zone of the app 
         self.f1 =customtkinter.CTkFrame(master=self.root,fg_color='#36454F',width=2000,height=50)
-        self.f1.grid(row=0,column=0,rowspan=1,columnspan=10,sticky='ew')
+        self.f1.place(x=0,y=0)
         # frame for the buttons of adb commands 
-        self.f2 = customtkinter.CTkFrame(master=self.root,width=100,height=1000)
-        self.f2.grid(row=1,column=0,rowspan=10,columnspan=1,sticky='ns')
+        self.f2 = customtkinter.CTkFrame(master=self.root,width=150,height=960)
+        self.f2.place(x=0,y=51)
         # frame of output terminal 
-        self.f3 = customtkinter.CTkFrame(master=self.root,width=200,height=400)
-        self.f3.grid(row=1,column=1,rowspan=8,columnspan=4,sticky='ns')
+        self.f3 = customtkinter.CTkFrame(master=self.root,width=500,height=200)
+        self.f3.place(x=151,y=51)
 
     def create_buttons(self):
         
-        self.b8 = customtkinter.CTkButton(master=self.f2, text="Start Scrcpy", command=self.start_scrcpy,border_color="dark",width=25,height=50)
-        self.b8.grid(row=3, column=0, rowspan=1, columnspan=1,sticky='we')
+        self.b8 = customtkinter.CTkButton(master=self.f2, text="Start Scrcpy", command=self.start_scrcpy,border_color="dark",width=140,height=50)
+        self.b8.place(x=4,y=0)
+        # self.b8.grid(row=3, column=0, rowspan=1, columnspan=1,sticky='we')
 
-        self.b9 = customtkinter.CTkButton(master=self.f2, text="Stop Scrcpy",fg_color='red', command=self.stop_scrcpy, state="disabled", border_color="dark",width=25,height=50)
-        self.b9.grid(row=4, column=0, rowspan=1, columnspan=1,sticky='we')
+        self.b9 = customtkinter.CTkButton(master=self.f2, text="Stop Scrcpy",fg_color='red', command=self.stop_scrcpy, state="disabled", border_color="dark",width=140,height=50)
+        self.b9.place(x=4,y=52)
 
-        self.b7 = customtkinter.CTkButton(master=self.f2, text='Clear Terminal Output', command=self.clear_output,border_color="dark",width=20,height=50)
-        self.b7.grid(row=9, column=0, rowspan=1, columnspan=1,sticky='we')
+        self.b7 = customtkinter.CTkButton(master=self.f2, text='Clear Terminal Output', command=self.clear_output,border_color="dark",width=140,height=50)
+        self.b7.place(x=4,y=104)
 
-        self.b1 = customtkinter.CTkButton(master=self.f2, text='adb_devices',command=self.list_devices, border_color="dark",width=25,height=50)
-        self.b1.grid(row=8, column=0, rowspan=1, columnspan=1,sticky='we')
+        self.b1 = customtkinter.CTkButton(master=self.f2, text='adb_devices',command=self.list_devices, border_color="dark",width=140,height=50)
+        self.b1.place(x=4,y=156)
 
-        self.b2 = customtkinter.CTkButton(self.f2, text='profiles',command=self.list_profiles, border_color="dark",width=25,height=50)
-        self.b2.grid(row=2, column=0, rowspan=1, columnspan=1,sticky='we')
+        self.b2 = customtkinter.CTkButton(self.f2, text='profiles',command=self.list_profiles, border_color="dark",width=140,height=50)
+        self.b2.place(x=4,y=208)
 
-        self.b3 = customtkinter.CTkButton(master=self.f2, text='VOLUME_UP',command=self.volume_plus, border_color="dark",width=25,height=50)
-        self.b3.grid(row=5, column=0, rowspan=1, columnspan=1,sticky='we')
+        self.b3 = customtkinter.CTkButton(master=self.f2, text='VOLUME_UP',command=self.volume_plus, border_color="dark",width=140,height=50)
+        self.b3.place(x=4,y=260)
 
-        self.b4 = customtkinter.CTkButton(master=self.f2, text='VLUME_DOWN', command=self.volume_minus, border_color="dark",width=25,height=50)
-        self.b4.grid(row=6 , column=0, rowspan=1, columnspan=1 , sticky='we')
+        self.b4 = customtkinter.CTkButton(master=self.f2, text='VLUME_DOWN', command=self.volume_minus, border_color="dark",width=140,height=50)
+        self.b4.place(x=4,y=312)
         
-        self.b5 = customtkinter.CTkButton(master=self.f2, text='Mute', command=self.mute, border_color="dark",width=25,height=50)
-        self.b5.grid(row=7 , column=0, rowspan=1, columnspan=1 , sticky='we')
+        self.b5 = customtkinter.CTkButton(master=self.f2, text='Mute', command=self.mute, border_color="dark",width=140,height=50)
+        self.b5.place(x=4,y=364)
 
-        # self.b3 = customtkinter.CTkButton(self.f2, text='volume_minus',command=volume_minus, border_color="dark")
-        # self.b3.grid(row=3, column=1, rowspan=1, columnspan=1,sticky='nsew')
+        self.b3 = customtkinter.CTkButton(self.f2, text='volume_minus',command=self.volume_minus, border_color="dark",width=140,height=50)
+        self.b3.place(x=4,y=416)
 
 
     def create_output_terminal(self):
-        self.output_text = customtkinter.CTkTextbox(master=self.f3,text_color='#E2A76F',font=('arial', 16),fg_color='#757575',width=200,height=400)
-        self.output_text.grid(row=1, column=1,rowspan=6,columnspan=4,sticky='we')
+        self.output_text = customtkinter.CTkTextbox(master=self.f3,text_color='#E2A76F',font=('arial', 16),fg_color='#757575',width=500,height=200)
+        self.output_text.place(x=0,y=0)
         
     def append_output(self, text):
         self.output_text.insert("end", text)
