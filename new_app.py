@@ -1,5 +1,5 @@
 
-import customtkinter # you should install pip3 install customtkinter
+import customtkinter # you should install customtkinter via :  pip3 install customtkinter & tkinter via : sudo apt install python3.8-tk
 import subprocess
 import threading
 from PIL import Image
