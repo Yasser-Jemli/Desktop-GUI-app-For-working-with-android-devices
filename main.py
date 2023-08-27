@@ -12,7 +12,7 @@ root.tk.call("source","forest-light.tcl")
 root.tk.call("source","forest-dark.tcl")
 style.theme_use("forest-dark")
 
-
+scrcpy_process = None
 # Frame are defined Here ............... 
 
 
@@ -44,6 +44,13 @@ def start_scrcpy():
         scrcpy_thread.start()
         append_output('Starting Scrcpy 99%.... \n')
 
+def stop_scrcpy():
+        if      scrcpy_process is not None and scrcpy_process.poll() is None:
+                scrcpy_process.terminate()
+                scrcpy_process.wait()  # Wait for the process to finish
+
+                b3.configure(state="normal")
+                b4.configure(state="disabled")
 # our button functions -- adb commands 
 
 
@@ -152,7 +159,7 @@ b2 = ttk.Button(button_frame_label , text=" list _ profiles ", command=list_prof
 b2.grid(row=2 , column=0 ,padx=5, pady=5, sticky="nsew")
 b3 = ttk.Button(button_frame_label, text=" Start Scrcpy ",command=start_scrcpy)
 b3.grid(row=3 , column=0 ,padx=5, pady=5, sticky="nsew")
-b4 = ttk.Button(button_frame_label , text=" Stop Scrcpy ")
+b4 = ttk.Button(button_frame_label , text=" Stop Scrcpy ",command=stop_scrcpy)
 b4.grid(row=4 , column=0 ,padx=5, pady=5, sticky="nsew")
 b5 = ttk.Button(button_frame_label, text=" Volume Up ",command=run_volume_plus)
 b5.grid(row=5 , column=0 ,padx=5, pady=5, sticky="nsew")
