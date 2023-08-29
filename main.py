@@ -4,6 +4,7 @@ import customtkinter
 import subprocess
 import threading
 
+
 # Main Window 
 
 root = tk.Tk()
@@ -150,15 +151,6 @@ performance_frame.grid(row=1,column=1,padx=20 , pady=20)
 
 app_control_frame = ttk.LabelFrame(frame, text="Settings")
 app_control_frame.grid(row=2,column=0,sticky="nsew",pady=50 , padx=50)
-
-# Load the background image
-background_image = tk.PhotoImage(file="images.png")  # Replace with your image file
-
-# Create a label to display the background image
-background_label = tk.Label(app_control_frame, image=background_image)
-background_label.place(relwidth=1, relheight=1) # Cover the entire window
-
-
 
 # My terminal function 
 
