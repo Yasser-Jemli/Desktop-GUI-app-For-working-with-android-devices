@@ -1,51 +1,46 @@
 import tkinter as tk
 import subprocess
-import re
+import threading
+import time
 
+def run_adb_top():
+    try:
+        # Run the adb shell top -m 5 command and capture the output
+        adb_command = ["adb", "shell", "top", "-m", "5"]
+        process = subprocess.Popen(adb_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
 
-app = tk.Tk()
-app.title("Android Control App")
+        # Create a separate thread to continuously read and display the output
+        def display_output():
+            while True:
+                output_line = process.stdout.readline()
+                if not output_line:
+                    break
+                update_output_text(output_line)
 
-output_text = tk.Text(app, height=10, width=50)
-output_text.pack()
+        output_thread = threading.Thread(target=display_output)
+        output_thread.start()
+    except subprocess.CalledProcessError as e:
+        # Handle errors, for example, if adb is not found
+        update_output_text(f"Error: {e}")
 
-cpu_label = tk.Label(app, text="CPU Usage:")
-cpu_label.pack()
+def update_output_text(output_line):
+    output_text.config(state=tk.NORMAL)
+    output_text.insert(tk.END, output_line)
+    output_text.config(state=tk.DISABLED)
+    output_text.see(tk.END)  # Scroll to the end of the text
 
-ram_label = tk.Label(app, text="RAM Usage:")
-ram_label.pack()
+# Create the main window
+root = tk.Tk()
+root.title("ADB Shell top -m 5 Output")
 
-# Function to update the UI with CPU and RAM usage
-def update_ui():
-    # Run 'top -n 1' command and capture its output
-    top_output = subprocess.check_output(["adb", "shell", "top", "-n", "1"]).decode("utf-8")
-    
-    # Extract CPU and RAM usage percentages using regular expressions
-    cpu_match = re.search(r"%Cpu\(s\):.*?([\d\.]+)%", top_output)
-    ram_match = re.search(r"KiB Mem :.*?([\d\.]+) used,", top_output)
+# Create a Text widget to display the output
+output_text = tk.Text(root, wrap=tk.WORD, height=20, width=80)
+output_text.pack(padx=10, pady=10)
+output_text.config(state=tk.DISABLED)  # Disable text widget for editing
 
-    if cpu_match:
-        cpu_usage = cpu_match.group(1)
-    else:
-        cpu_usage = "N/A"
+# Create a button to run the adb command
+run_button = tk.Button(root, text="Run adb shell top -m 5", command=run_adb_top)
+run_button.pack(pady=10)
 
-    if ram_match:
-        ram_usage = ram_match.group(1)
-    else:
-        ram_usage = "N/A"
-
-    # Update labels
-    cpu_label.config(text=f"CPU Usage: {cpu_usage}%")
-    ram_label.config(text=f"RAM Usage: {ram_usage.strip()} KiB")
-    
-    # Update text widget with the entire 'top' command output
-    output_text.delete("1.0", tk.END)
-    output_text.insert(tk.END, top_output)
-    
-    # Schedule the function to run again after 1 second
-    app.after(1000, update_ui)
-
-# Start the updating process
-update_ui()
-
-app.mainloop()
+# Start the Tkinter main loop
+root.mainloop()

@@ -3,7 +3,7 @@ from tkinter  import ttk
 import customtkinter
 import subprocess
 import threading
-
+import time
 
 # Main Window 
 
@@ -17,6 +17,31 @@ frame = ttk.Frame(root)
 frame.pack()
 
 # scrcpy functions 
+def run_adb_top():
+    try:
+        # Run the adb shell top -m 5 command and capture the output
+        adb_command = ["adb", "shell", "top", "-m", "5"]
+        process = subprocess.Popen(adb_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+
+        # Create a separate thread to continuously read and display the output
+        def display_output():
+            while True:
+                output_line = process.stdout.readline()
+                if not output_line:
+                    break
+                update_perfo_text(output_line)
+
+        output_thread = threading.Thread(target=display_output)
+        output_thread.start()
+    except subprocess.CalledProcessError as e:
+        # Handle errors, for example, if adb is not found
+        update_perfo_text(f"Error: {e}")
+
+def update_perfo_text(output_line):
+    output_perfo.configure(state=tk.NORMAL)
+    output_perfo.insert(tk.END, output_line)
+    output_perfo.configure(state=tk.DISABLED)
+    output_perfo.see(tk.END)  # Scroll to the end of the text
 
 def run_scrcpy():
         scrcpy_process = subprocess.Popen(["scrcpy"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
@@ -115,26 +140,43 @@ def run_mute():
             run_mutee.wait()
         except Exception as e:
             append_output(f"Error: {str(e)}\n")
-def bugreport_generate():
-      bugreport_thread = threading.Thread(target=run_bugreport)
-      bugreport_thread.start
 
-def run_bugreport():
-        try:
-            run_bugreport_thread= subprocess.Popen(["adb","bugreport"], stdout=subprocess.PIPE,stderr=subprocess.PIPE, text=True)
-            stdout , stderr = run_bugreport_thread.communicate()
-            append_output(text='Bugreport Generation In Progress .... 10% ... ')
-            append_output(stdout)
-            append_output(stderr)
-            run_bugreport_thread.wait()
-        except Exception as e:
-            append_output(f"Error: {str(e)}\n")
+def run_bugreport(output_file="bugreport.txt"):
+    try:
+        # Start the adb bugreport command
+        run_bugreport_thread = subprocess.Popen(["adb", "bugreport"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+
+        # Open the output file for writing
+        with open(output_file, "w", encoding="utf-8") as output_file_obj:
+            while True:
+                output_line = run_bugreport_thread.stdout.readline()
+                if not output_line:
+                    break
+                output_file_obj.write(output_line)
+                output_file_obj.flush()
+                append_output(output_line)
+
+        # Wait for the adb bugreport command to complete
+        run_bugreport_thread.wait()
+        append_output('Bugreport Generation Completed.\n')
+
+    except Exception as e:
+        append_output(f"Error: {str(e)}\n")
+
+# Your button click event handler function
+def bugreport_generate():
+    append_output("Bugreport Generation In Progress .... 10% ... \n")
+    # Start the bugreport process in a separate thread
+    append_output("Please Don't Do anything untill finshing Bugreport Generation...   ")
+    bugreport_thread = threading.Thread(target=run_bugreport)
+    bugreport_thread.start()
 
 # function for Scripts Button 
 
 def update_spinbox_values():
     age_spinbox['values'] = ('Power On', 'Power Off')
-
+    if age_spinbox ==  'reboot':
+        subprocess.Popen(["adb","reboot"])
 # Label for frames are definied Here 
 
 button_frame_label = ttk.LabelFrame(frame,text="My ADB Commands")
@@ -158,8 +200,9 @@ app_control_frame.grid(row=2,column=0,sticky="nsew",pady=50 , padx=50)
 output_text = customtkinter.CTkTextbox(terminal_frame, width=600 ,height=250)
 output_text.grid(row=0, column=0 , sticky="nsew")
 
-output_performance_frame = customtkinter.CTkTextbox(performance_frame, width=600, height=250)
-output_performance_frame.grid(row=0,column=0, sticky="nsew")
+output_perfo = customtkinter.CTkTextbox(performance_frame, width=600, height=250)
+output_perfo.grid(row=0,column=0, sticky="nsew")
+output_perfo.configure(state=tk.DISABLED)
         
 def append_output(text):
         output_text.insert("end", text)
@@ -196,10 +239,11 @@ b7 = ttk.Button(button_frame_label, text="Clear Terminal",command=clear_output)
 b7.grid(row=6 , column=0 ,padx=5, pady=5, sticky="nsew")
 b8 = ttk.Button(button_frame_label,text=" Bugreport", command=bugreport_generate)
 b8.grid(row=7, column=0 , pady=5 , padx=5,sticky="nsew")
-
+b9 = ttk.Button(button_frame_label, text="Check My device Performance" , command=run_adb_top)
+b9.grid(row=8,column=0,pady=10,padx=10,sticky="nsew")
 # button for script_frame_label are definied Here 
 
-age_spinbox = ttk.Spinbox(script_frame_label, values=('ECS_BOOT', 'COLD_BOOT','customer reboot'))
+age_spinbox = ttk.Spinbox(script_frame_label, values=('Suspend To Ram', 'Suspend To Disk','reboot'))
 age_spinbox.set('Select Your Power Transition')  # Set an initial value
 age_spinbox.grid(row=1, column=0, padx=5, pady=5, sticky="ew")
 
