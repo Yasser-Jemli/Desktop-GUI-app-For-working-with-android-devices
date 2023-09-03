@@ -167,22 +167,43 @@ def run_bugreport(output_file="bugreport.txt"):
 def bugreport_generate():
     append_output("Bugreport Generation In Progress .... 10% ... \n")
     # Start the bugreport process in a separate thread
-    append_output("Please Don't Do anything untill finshing Bugreport Generation...   ")
+    append_output("Please Don't Do anything untill finshing Bugreport Generation...   \n")
     bugreport_thread = threading.Thread(target=run_bugreport)
     bugreport_thread.start()
 
 # function for Scripts Button 
+def adb_reboot():
+    adb_reboot_thread = threading.Thread(target=run_reboot)
+    adb_reboot_thread.start()
 
+def run_reboot():
+        try:
+            run_adb_reboot = subprocess.Popen(["adb","reboot"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            stdout,stderr = run_adb_reboot.communicate()
+            append_output(text='Reboot In Progress .. 20% .. \n')
+            append_output(stdout)
+            append_output(stderr)
+            run_adb_reboot.wait()
+        except Exception as e:
+             append_output(f"Error: {str(e)}\n")
+         
 def update_spinbox_values():
-    age_spinbox['values'] = ('Power On', 'Power Off')
-    if age_spinbox ==  'reboot':
-        subprocess.Popen(["adb","reboot"])
+    selected_power = power_spinbox.get()
+    if selected_power == 'Reboot':
+        append_output("Rebooting the Device \n")
+        adb_reboot()
+    elif selected_power == 'Suspend To Ram':
+        append_output("Suspend To Ram .. 10 % \n")
+    elif selected_power == "Suspend To Disk":
+         append_output("Suspend To Disk ... 10% ... \n")
+    
+    
 # Label for frames are definied Here 
 
 button_frame_label = ttk.LabelFrame(frame,text="My ADB Commands")
 button_frame_label.grid(row=0, column=0, padx=20 , pady=10)
 
-script_frame_label = ttk.LabelFrame(frame,text="My Scripts")
+script_frame_label = ttk.LabelFrame(frame,text="My Power Transistions")
 script_frame_label.grid(row=1, column=0, padx=20 , pady=10)
 
 terminal_frame = ttk.LabelFrame(frame, text="My terminal")
@@ -243,9 +264,9 @@ b9 = ttk.Button(button_frame_label, text="Check My device Performance" , command
 b9.grid(row=8,column=0,pady=10,padx=10,sticky="nsew")
 # button for script_frame_label are definied Here 
 
-age_spinbox = ttk.Spinbox(script_frame_label, values=('Suspend To Ram', 'Suspend To Disk','reboot'))
-age_spinbox.set('Select Your Power Transition')  # Set an initial value
-age_spinbox.grid(row=1, column=0, padx=5, pady=5, sticky="ew")
+power_spinbox = ttk.Spinbox(script_frame_label, values=('Suspend To Ram', 'Suspend To Disk','Reboot'))
+power_spinbox.set('Select Your Power Transition')  # Set an initial value
+power_spinbox.grid(row=1, column=0, padx=5, pady=5, sticky="ew")
 
 update_button = ttk.Button(script_frame_label, text="Make your Selected Power Transition", command=update_spinbox_values)
 update_button.grid(row=2,column=0, sticky="nsew ",pady=5,padx=5)
