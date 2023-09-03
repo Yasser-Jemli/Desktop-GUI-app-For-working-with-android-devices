@@ -1,3 +1,7 @@
+#!/usr/bin/python3.8  
+#   Developed By Yasser JEMLi 2023 
+# adding this line #!/usr/bin/python3.8 only to facilaite execution while coding process 
+
 import tkinter as tk 
 from tkinter  import ttk
 import customtkinter
@@ -63,9 +67,7 @@ def start_scrcpy():
         scrcpy_thread = threading.Thread(target=run_scrcpy)
         scrcpy_thread.start()
        
-
 # our button functions -- adb commands 
-
 
 def list_profiles():
         list_profiles_thread = threading.Thread(target=run_list_profiles)
@@ -187,7 +189,7 @@ def run_reboot():
         except Exception as e:
              append_output(f"Error: {str(e)}\n")
          
-def update_spinbox_values():
+def execute_spinbox_values():
     selected_power = power_spinbox.get()
     if selected_power == 'Reboot':
         append_output("Rebooting the Device \n")
@@ -203,8 +205,8 @@ def update_spinbox_values():
 button_frame_label = ttk.LabelFrame(frame,text="My ADB Commands")
 button_frame_label.grid(row=0, column=0, padx=20 , pady=10)
 
-script_frame_label = ttk.LabelFrame(frame,text="My Power Transistions")
-script_frame_label.grid(row=1, column=0, padx=20 , pady=10)
+power_frame_label = ttk.LabelFrame(frame,text="My Power Transistions")
+power_frame_label.grid(row=1, column=0, padx=20 , pady=10)
 
 terminal_frame = ttk.LabelFrame(frame, text="My terminal")
 terminal_frame.grid(row=0,column=1, padx=20 , pady=20)
@@ -216,8 +218,6 @@ app_control_frame = ttk.LabelFrame(frame, text="Settings")
 app_control_frame.grid(row=2,column=0,sticky="nsew",pady=50 , padx=50)
 
 # My terminal function 
-
-
 output_text = customtkinter.CTkTextbox(terminal_frame, width=600 ,height=250)
 output_text.grid(row=0, column=0 , sticky="nsew")
 
@@ -262,15 +262,15 @@ b8 = ttk.Button(button_frame_label,text=" Bugreport", command=bugreport_generate
 b8.grid(row=7, column=0 , pady=5 , padx=5,sticky="nsew")
 b9 = ttk.Button(button_frame_label, text="Check My device Performance" , command=run_adb_top)
 b9.grid(row=8,column=0,pady=10,padx=10,sticky="nsew")
+
 # button for script_frame_label are definied Here 
 
-power_spinbox = ttk.Spinbox(script_frame_label, values=('Suspend To Ram', 'Suspend To Disk','Reboot'))
+power_spinbox = ttk.Spinbox(power_frame_label, values=('Suspend To Ram', 'Suspend To Disk','Reboot'))
 power_spinbox.set('Select Your Power Transition')  # Set an initial value
 power_spinbox.grid(row=1, column=0, padx=5, pady=5, sticky="ew")
 
-update_button = ttk.Button(script_frame_label, text="Make your Selected Power Transition", command=update_spinbox_values)
+update_button = ttk.Button(power_frame_label, text="Make your Selected Power Transition", command=execute_spinbox_values)
 update_button.grid(row=2,column=0, sticky="nsew ",pady=5,padx=5)
-
 
 # Window Loop 
 root.mainloop()
