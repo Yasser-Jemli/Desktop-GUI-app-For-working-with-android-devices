@@ -26,7 +26,8 @@ def run_adb_top():
         # Run the adb shell top -m 5 command and capture the output
         adb_command = ["adb", "shell", "top", "-m", "5"]
         process = subprocess.Popen(adb_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-
+        stderr = process.communicate()
+        append_output(stderr)
         # Create a separate thread to continuously read and display the output
         def display_output():
             while True:
@@ -147,7 +148,9 @@ def run_bugreport(output_file="bugreport.txt"):
     try:
         # Start the adb bugreport command
         run_bugreport_thread = subprocess.Popen(["adb", "bugreport"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-
+        # stdout , stderr = run_bugreport_thread.communicate()
+        # append_output(stderr)
+        # append_output(stdout)
         # Open the output file for writing
         with open(output_file, "w", encoding="utf-8") as output_file_obj:
             while True:
