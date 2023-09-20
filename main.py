@@ -220,6 +220,9 @@ performance_frame.grid(row=1,column=1,padx=20 , pady=20)
 app_control_frame = ttk.LabelFrame(frame, text="Settings")
 app_control_frame.grid(row=2,column=0,sticky="nsew",pady=50 , padx=50)
 
+Activity_controle_frame = ttk.LabelFrame(frame, text="Device Activity")
+Activity_controle_frame.grid(row=2,column=1, sticky="nsew", pady=50 , padx=50)
+
 # My terminal function 
 output_text = customtkinter.CTkTextbox(terminal_frame, width=600 ,height=250)
 output_text.grid(row=0, column=0 , sticky="nsew")
@@ -227,6 +230,9 @@ output_text.grid(row=0, column=0 , sticky="nsew")
 output_perfo = customtkinter.CTkTextbox(performance_frame, width=600, height=250)
 output_perfo.grid(row=0,column=0, sticky="nsew")
 output_perfo.configure(state=tk.DISABLED)
+
+output_activity = customtkinter.CTkTextbox(Activity_controle_frame, width= 600 , height=50)
+output_activity.grid(row=0,column=0 , sticky="nsew")
         
 def append_output(text):
         output_text.insert("end", text)
