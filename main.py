@@ -281,5 +281,8 @@ power_spinbox.grid(row=1, column=0, padx=5, pady=5, sticky="ew")
 update_button = ttk.Button(power_frame_label, text="Make your Selected Power Transition", command=execute_spinbox_values)
 update_button.grid(row=2,column=0, sticky="nsew ",pady=5,padx=5)
 
+# App Title 
+root.title('My Device')
+
 # Window Loop 
 root.mainloop()
