@@ -18,7 +18,7 @@ root.tk.call("source","forest-dark.tcl")
 style.theme_use("forest-dark")
 
 frame = ttk.Frame(root)
-frame.pack()
+frame.grid(row=0,column=0)
 
 # scrcpy functions 
 def run_adb_top():
@@ -206,33 +206,34 @@ def execute_spinbox_values():
 # Label for frames are definied Here 
 
 button_frame_label = ttk.LabelFrame(frame,text="My ADB Commands")
-button_frame_label.grid(row=0, column=0, padx=20 , pady=10)
-
-power_frame_label = ttk.LabelFrame(frame,text="My Power Transistions")
-power_frame_label.grid(row=1, column=0, padx=20 , pady=10)
+button_frame_label.grid(row=0, column=0)
 
 terminal_frame = ttk.LabelFrame(frame, text="My terminal")
-terminal_frame.grid(row=0,column=1, padx=20 , pady=20)
+terminal_frame.grid(row=0,column=1)
+
+power_frame_label = ttk.LabelFrame(frame,text="My Power Transistions")
+power_frame_label.grid(row=1, column=0)
+
 
 performance_frame = ttk.LabelFrame(frame, text="Android Device Performance")
-performance_frame.grid(row=1,column=1,padx=20 , pady=20)
+performance_frame.grid(row=1,column=1)
 
-app_control_frame = ttk.LabelFrame(frame, text="Settings")
-app_control_frame.grid(row=2,column=0,sticky="nsew",pady=50 , padx=50)
+app_control = ttk.LabelFrame(frame, text="Settings")
+app_control.grid(row=2,column=0)
 
 Activity_controle_frame = ttk.LabelFrame(frame, text="Device Activity")
-Activity_controle_frame.grid(row=2,column=1, sticky="nsew", pady=50 , padx=50)
+Activity_controle_frame.grid(row=2,column=1)
 
 # My terminal function 
-output_text = customtkinter.CTkTextbox(terminal_frame, width=600 ,height=250)
-output_text.grid(row=0, column=0 , sticky="nsew")
+output_text = customtkinter.CTkTextbox(terminal_frame, width=200 ,height=150)
+output_text.grid(row=0, column=0)
 
-output_perfo = customtkinter.CTkTextbox(performance_frame, width=600, height=250)
-output_perfo.grid(row=0,column=0, sticky="nsew")
+output_perfo = customtkinter.CTkTextbox(performance_frame, width=200, height=150)
+output_perfo.grid(row=0,column=0)
 output_perfo.configure(state=tk.DISABLED)
 
-output_activity = customtkinter.CTkTextbox(Activity_controle_frame, width= 600 , height=50)
-output_activity.grid(row=0,column=0 , sticky="nsew")
+output_activity = customtkinter.CTkTextbox(Activity_controle_frame, width= 200 , height=50)
+output_activity.grid(row=0,column=0)
         
 def append_output(text):
         output_text.insert("end", text)
@@ -250,39 +251,37 @@ def toggel_mode():
 
 # Settings Button 
 
-mode_switch = ttk.Checkbutton(app_control_frame, text="Mode : Dark/Light ", style="Switch",command=toggel_mode)
-mode_switch.grid(row=6,column=0,padx=5 , pady=10 , sticky="nsew")
+mode_switch = ttk.Checkbutton(app_control, text="Mode : Dark/Light ", style="Switch",command=toggel_mode)
+mode_switch.grid(row=6,column=0 , sticky="nsew")
 
 # button for the button_frame_label are definied Here 
 
 b1 = ttk.Button(button_frame_label, text=" list _ adb _devices + states ", command=list_devices)
-b1.grid(row=1 , column=0 ,padx=5, pady=5, sticky="nsew")
+b1.grid(row=1 , column=0 , sticky="ew")
 b2 = ttk.Button(button_frame_label , text=" list _ profiles ", command=list_profiles)
-b2.grid(row=2 , column=0 ,padx=5, pady=5, sticky="nsew")
+b2.grid(row=2 , column=0 , sticky="ew")
 b3 = ttk.Button(button_frame_label, text=" Start Scrcpy ",command=start_scrcpy)
-b3.grid(row=3 , column=0 ,padx=5, pady=5, sticky="nsew")
+b3.grid(row=3 , column=0 , sticky="ew")
 b5 = ttk.Button(button_frame_label, text=" Volume Up ",command=run_volume_plus)
-b5.grid(row=4 , column=0 ,padx=5, pady=5, sticky="nsew")
+b5.grid(row=4 , column=0 , sticky="ew")
 b6 = ttk.Button(button_frame_label , text=" Volume Down ",command=run_volume_minus)
-b6.grid(row=5 , column=0 ,padx=5, pady=5, sticky="nsew")
+b6.grid(row=5 , column=0 , sticky="ew")
 b7 = ttk.Button(button_frame_label, text="Clear Terminal",command=clear_output)
-b7.grid(row=6 , column=0 ,padx=5, pady=5, sticky="nsew")
+b7.grid(row=6 , column=0 , sticky="ew")
 b8 = ttk.Button(button_frame_label,text=" Bugreport", command=bugreport_generate)
-b8.grid(row=7, column=0 , pady=5 , padx=5,sticky="nsew")
+b8.grid(row=7, column=0 ,sticky="ew")
 b9 = ttk.Button(button_frame_label, text="Check My device Performance" , command=run_adb_top)
-b9.grid(row=8,column=0,pady=10,padx=10,sticky="nsew")
+b9.grid(row=8,column=0,sticky="ew")
 
 # button for script_frame_label are definied Here 
 
 power_spinbox = ttk.Spinbox(power_frame_label, values=('Suspend To Ram', 'Suspend To Disk','Reboot'))
 power_spinbox.set('Select Your Power Transition')  # Set an initial value
-power_spinbox.grid(row=1, column=0, padx=5, pady=5, sticky="ew")
+power_spinbox.grid(row=1, column=0, sticky="ew")
 
 update_button = ttk.Button(power_frame_label, text="Make your Selected Power Transition", command=execute_spinbox_values)
-update_button.grid(row=2,column=0, sticky="nsew ",pady=5,padx=5)
+update_button.grid(row=2,column=0, sticky="nsew ")
 
-# App Title 
-root.title('My Device')
 
 # Window Loop 
 root.mainloop()
