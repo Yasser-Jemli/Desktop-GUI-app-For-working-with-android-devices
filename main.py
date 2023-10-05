@@ -20,35 +20,31 @@ root.geometry('1024x800')
 # menu
 menu = tk.Menu(root)
 
+
 # sub menu 
 file_menu = tk.Menu(menu, tearoff = False)
-file_menu.add_command(label = 'New', command = lambda: print('New file'))
-file_menu.add_command(label = 'Open', command = lambda: print('Open file'))
+file_menu.add_command(label = 'How To configure CAN _ bus', command = lambda: print('New file'))
+file_menu.add_command(label = 'How To configure Multiple adb devices', command = lambda: print('Open file'))
 file_menu.add_separator()
-menu.add_cascade(label = 'File', menu = file_menu)
+menu.add_cascade(label = 'How To Section ', menu = file_menu)
 
 # another sub menu
 help_menu = tk.Menu(menu, tearoff = False)
-help_menu.add_command(label = 'Help entry', command = lambda: print(help_check_string.get()))
+help_menu.add_command(label = 'Application Documentation', command = lambda: print(help_check_string.get()))
 help_check_string = tk.StringVar()
-help_menu.add_checkbutton(label = 'check', onvalue = 'on', offvalue = 'off', variable = help_check_string)
+help_menu.add_checkbutton(label = '', onvalue = 'on', offvalue = 'off', variable = help_check_string)
 menu.add_cascade(label = 'Help', menu = help_menu)
 
 # add another menu to the main menu, this one should have a sub menu
 # try to read the website below and add a submenu
 # docs: https://www.tutorialspoint.com/python/tk_menu.htm
-exercise_menu = tk.Menu(menu, tearoff = False)
-exercise_menu.add_command(label = 'exercise test 1')
-menu.add_cascade(label = 'Exercise', menu = exercise_menu)
 
-exercise_sub_menu = tk.Menu(menu, tearoff = False)
-exercise_sub_menu.add_command(label = 'some more stuff')
-exercise_menu.add_cascade(label = 'more stuff', menu = exercise_sub_menu)
 
-root.configure(menu = menu)
+# Display the menu
+root.config(menu=menu)
 
 frame = ttk.Frame(root)
-frame.pack()
+frame.grid(row=0,column=0)
 
 # scrcpy functions 
 def run_adb_top():
@@ -236,19 +232,19 @@ def execute_spinbox_values():
 # Label for frames are definied Here 
 
 button_frame_label = ttk.LabelFrame(frame,text="My ADB Commands",width=200,height=200)
-button_frame_label.grid(row=0, column=0,padx=1,pady=1)
-
-terminal_frame = ttk.LabelFrame(frame, text="My terminal")
-terminal_frame.grid(row=0,column=1,padx=1,pady=1)
+button_frame_label.grid(row=2, column=0,padx=1,pady=1)
 
 power_frame_label = ttk.LabelFrame(frame,text="My Power Transistions",width=200,height=200)
-power_frame_label.grid(row=1, column=0,padx=1,pady=1)
+power_frame_label.grid(row=0, column=0,padx=1,pady=1)
+
+app_control = ttk.LabelFrame(frame, text="Settings",width=200,height=200)
+app_control.grid(row=1,column=0,pady=1,padx=1)
+
+terminal_frame = ttk.LabelFrame(frame, text="My terminal", width=200,height=200)
+terminal_frame.grid(row=0,column=1,padx=1,pady=1)
 
 performance_frame = ttk.LabelFrame(frame, text="Android Device Performance",width=200,height=200)
 performance_frame.grid(row=1,column=1,padx=1,pady=1)
-
-app_control = ttk.LabelFrame(frame, text="Settings",width=200,height=200)
-app_control.grid(row=2,column=0,pady=1,padx=1)
 
 Activity_controle_frame = ttk.LabelFrame(frame, text="Device Activity",width=200,height=200)
 Activity_controle_frame.grid(row=2,column=1,pady=1,padx=1)
@@ -259,7 +255,6 @@ output_text.grid(row=0, column=0,pady=1,padx=1,sticky='nsew')
 
 output_perfo = customtkinter.CTkTextbox(performance_frame, width=250, height=150)
 output_perfo.grid(row=0,column=0,pady=1,padx=1,sticky='nsew')
-output_perfo.configure(state=tk.DISABLED)
 
 output_activity = customtkinter.CTkTextbox(Activity_controle_frame, width= 250 , height=150)
 output_activity.grid(row=0,column=0,pady=1,padx=1,sticky='nsew')
@@ -281,7 +276,14 @@ def toggel_mode():
 # Settings Button 
 
 mode_switch = ttk.Checkbutton(app_control, text="Mode : Dark/Light ", style="Switch",command=toggel_mode)
-mode_switch.grid(row=6,column=0 , sticky="nsew")
+mode_switch.grid(row=1,column=0 , sticky="nsew")
+
+power_spinbox = ttk.Spinbox(app_control, values=('Adb device N°1', 'Adb device N°2','Adb device N°3'))
+power_spinbox.set('Select Your adb device')  # Set an initial value
+power_spinbox.grid(row=2, column=0, sticky="nsew",pady=5,padx=5)
+
+update_button = ttk.Button(app_control, text="Select Your Adb device", command=execute_spinbox_values)
+update_button.grid(row=3,column=0, sticky="nsew ",pady=5,padx=5)
 
 # button for the button_frame_label are definied Here 
 
