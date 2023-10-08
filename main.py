@@ -9,6 +9,7 @@ import subprocess
 import threading
 import time
 import ttkbootstrap as ttk
+from tkinter import messagebox
 # Main Window 
 
 root = ttk.Window(themename="darkly")
@@ -107,18 +108,19 @@ def update_perfo_text(output_line):
     output_perfo.see(tk.END)  # Scroll to the end of the text
 
 def run_scrcpy():
-        scrcpy_process = subprocess.Popen(["scrcpy"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        global selected_device
+        if selected_device is not None:
+            scrcpy_process = subprocess.Popen(["scrcpy","-s",selected_device], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            scrcpy_process.wait()  # Wait for the process to finish
 
-        scrcpy_process.wait()  # Wait for the process to finish
-
-        return_code = scrcpy_process.returncode
-        if return_code == 0:
-            append_output('Closing scrcpy ........\n')
-
-        else:
-            append_output('Starting Scrcpy 60% .... \n')
-            append_output('we encountered issues while trying to launch scrcpy\n')
-        b3.configure(state="normal")
+            return_code = scrcpy_process.returncode
+            print(return_code)
+            if return_code == 0:
+                append_output('Closing scrcpy ........\n')
+                b3.configure(state="normal")
+            else  :
+                append_output('we encountered issues while trying to launch scrcpy\n')
+                b3.configure(state="normal")
 
 def start_scrcpy():
         b3.configure(state="disabled")
@@ -145,7 +147,8 @@ def run_list_profiles():
                 append_output(f"Error: {str(e)}\n")
         else:
             print("No ADB device selected.")
-
+            messagebox.showerror("Error !","No Adb device was Selected !")
+            
 def list_devices():
         list_devices_thread = threading.Thread(target=run_list_devices)
         list_devices_thread.start()
@@ -179,7 +182,7 @@ def run_volume_plus():
                 append_output(f"Error: {str(e)}\n")
         else:
             print("No ADB device selected.")
-
+            messagebox.showerror("Error !","No Adb device was Selected !")
 def volume_minus():
         volume_minus_thread = threading.Thread(target=run_volume_minus)
         volume_minus_thread.start()
@@ -198,52 +201,61 @@ def run_volume_minus():
                 append_output(f"Error: {str(e)}\n")
         else:
             print("No ADB device selected.")
-
+            messagebox.showerror("Error !","No Adb device was Selected !")
 def mute():
         mute_thread = threading.Thread(target=run_mute)
         mute_thread.start()
 
 def run_mute():
         global selected_device
-        try:
-            run_mutee = subprocess.Popen(["adb","-s",selected_device,"shell","input","keyevent","KEYCODE_MUTE"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-            stdout, stderr = run_mutee.communicate()
-            append_output(text='You pressed The mute Button\n')
-            append_output(stdout)
-            append_output(stderr)
-            run_mutee.wait()
-        except Exception as e:
-            append_output(f"Error: {str(e)}\n")
+        if selected_device is not None:
+            try:
+                run_mutee = subprocess.Popen(["adb","-s",selected_device,"shell","input","keyevent","KEYCODE_MUTE"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+                stdout, stderr = run_mutee.communicate()
+                append_output(text='You pressed The mute Button\n')
+                append_output(stdout)
+                append_output(stderr)
+                run_mutee.wait()
+            except Exception as e:
+                append_output(f"Error: {str(e)}\n")
+        else:
+            print("No ADB device selected.")
+            messagebox.showerror("Error !","No Adb device was Selected !")
 
 def run_bugreport(output_file="bugreport.txt"):
-    try:
+    global selected_device
+    if selected_device is not None:
+        try:
+            append_output("Bugreport Generation In Progress .... 10% ... \n")
+            append_output("Please Don't Do anything untill finshing Bugreport Generation...   \n")
         # Start the adb bugreport command
-        run_bugreport_thread = subprocess.Popen(["adb", "bugreport"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            run_bugreport_thread = subprocess.Popen(["adb", "bugreport"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         # stdout , stderr = run_bugreport_thread.communicate()
         # append_output(stderr)
         # append_output(stdout)
         # Open the output file for writing
-        with open(output_file, "w", encoding="utf-8") as output_file_obj:
-            while True:
-                output_line = run_bugreport_thread.stdout.readline()
-                if not output_line:
-                    break
-                output_file_obj.write(output_line)
-                output_file_obj.flush()
-                append_output(output_line)
+            with open(output_file, "w", encoding="utf-8") as output_file_obj:
+                while True:
+                    output_line = run_bugreport_thread.stdout.readline()
+                    if not output_line:
+                        break
+                    output_file_obj.write(output_line)
+                    output_file_obj.flush()
+                    append_output(output_line)
 
         # Wait for the adb bugreport command to complete
-        run_bugreport_thread.wait()
-        append_output('Bugreport Generation Completed.\n')
+            run_bugreport_thread.wait()
+            append_output('Bugreport Generation Completed.\n')
 
-    except Exception as e:
-        append_output(f"Error: {str(e)}\n")
+        except Exception as e:
+            append_output(f"Error: {str(e)}\n")
+    else:
+            print("No ADB device selected.")
+            messagebox.showerror("Error !","No Adb device was Selected !")
 
 # Your button click event handler function
 def bugreport_generate():
-    append_output("Bugreport Generation In Progress .... 10% ... \n")
     # Start the bugreport process in a separate thread
-    append_output("Please Don't Do anything untill finshing Bugreport Generation...   \n")
     bugreport_thread = threading.Thread(target=run_bugreport)
     bugreport_thread.start()
 
@@ -264,6 +276,7 @@ def run_reboot():
              append_output(f"Error: {str(e)}\n")
          
 def execute_spinbox_values():
+    messagebox.showinfo("Feature Not AVailble","This Feature is not yet availble")
     selected_power = power_spinbox.get()
     if selected_power == 'Adb Reboot':
         append_output("Rebooting the Device \n")
@@ -315,9 +328,10 @@ def clear_output():
 
 def toggel_mode(): 
     if mode_switch.instate(["selected"]):
-        root.theme_use("superhero")   
+        messagebox.showinfo("Feature Not AVailble","This Feature is not yet availble")
     else:
         root.theme_use("darkly")
+        messagebox.showinfo("Feature Not AVailble","This Feature is not yet availble")
 
 # Settings Button 
 
@@ -362,6 +376,6 @@ power_spinbox.grid(row=1, column=0, sticky="ew",pady=1,padx=1)
 update_button = ttk.Button(power_frame_label, text="Make your Selected Power Transition", command=execute_spinbox_values)
 update_button.grid(row=2,column=0, sticky="nsew ",pady=1,padx=1)
 
-
+     
 # Window Loop 
 root.mainloop()
