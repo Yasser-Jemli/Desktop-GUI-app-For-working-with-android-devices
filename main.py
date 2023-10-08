@@ -14,19 +14,26 @@ from tkinter import messagebox
 
 root = ttk.Window(themename="darkly")
 root.geometry('1024x800')
+root.title("My Android Helper ")
+root.iconphoto(True, tk.PhotoImage(file='/home/yasser_jemli/Desktop_GUI_APP_For_Working_With_Android_devices/Untitled.png'))
 # menu
 menu = tk.Menu(root)
 
+def missing_feature():
+     messagebox.showinfo("Missing Manuel","This Feature is not availble yet !")
 # sub menu 
 file_menu = tk.Menu(menu, tearoff = False)
-file_menu.add_command(label = 'How To configure CAN _ bus', command = lambda: print('New file'))
-file_menu.add_command(label = 'How To configure Multiple adb devices', command = lambda: print('Open file'))
+file_menu.add_command(label = 'How To configure CAN _ bus',background='green', command =missing_feature)
 file_menu.add_separator()
+file_menu.add_command(label = 'How To configure Multiple adb devices',background='green', command = missing_feature)
+file_menu.add_separator()
+file_menu.add_command(label = 'Scrcpy issues & Fixes',background='green',command = missing_feature)
+
 menu.add_cascade(label = 'How To Section ', menu = file_menu)
 
 # another sub menu
 help_menu = tk.Menu(menu, tearoff = False)
-help_menu.add_command(label = 'Application Documentation', command = lambda: print(help_check_string.get()))
+help_menu.add_command(label = 'Application Documentation', command =missing_feature)
 help_check_string = tk.StringVar()
 help_menu.add_checkbutton(label = '', onvalue = 'on', offvalue = 'off', variable = help_check_string)
 menu.add_cascade(label = 'Help', menu = help_menu)
