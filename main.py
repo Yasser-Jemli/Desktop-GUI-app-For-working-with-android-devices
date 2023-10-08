@@ -8,7 +8,7 @@ import customtkinter
 import subprocess
 import threading
 import time
-
+import ttkbootstrap
 # Main Window 
 
 root = tk.Tk()
@@ -228,7 +228,14 @@ def execute_spinbox_values():
     elif selected_power == "Suspend To Disk":
          append_output("Suspend To Disk ... 10% ... \n")
     
-    
+# Switch mode  Dark/Light Function 
+
+def toggel_mode(): 
+    if mode_switch.instate(["selected"]):
+        style.theme_use("forest-light")    
+    else:
+        style.theme_use("forest-dark")
+
 # Label for frames are definied Here 
 
 button_frame_label = ttk.LabelFrame(frame,text="My ADB Commands",width=200,height=200)
@@ -265,13 +272,6 @@ def append_output(text):
 def clear_output():
         output_text.delete(1.0, "end")
 
-# Switch mode  Dark/Light Function 
-
-def toggel_mode(): 
-    if mode_switch.instate(["selected"]):
-        style.theme_use("forest-light")    
-    else:
-        style.theme_use("forest-dark")
 
 # Settings Button 
 
@@ -282,7 +282,7 @@ power_spinbox = ttk.Spinbox(app_control, values=('Adb device N°1', 'Adb device 
 power_spinbox.set('Select Your adb device')  # Set an initial value
 power_spinbox.grid(row=2, column=0, sticky="nsew",pady=5,padx=5)
 
-update_button = ttk.Button(app_control, text="Select Your Adb device", command=execute_spinbox_values)
+update_button = ttk.Button(app_control,text="Select Your Adb device", command=execute_spinbox_values)
 update_button.grid(row=3,column=0, sticky="nsew ",pady=5,padx=5)
 
 # button for the button_frame_label are definied Here 
