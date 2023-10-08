@@ -167,32 +167,38 @@ def volume_plus():
 
 def run_volume_plus():
         global selected_device
-        try:
-            run_volume_pluss = subprocess.Popen(["adb", "-s",selected_device,"shell", "input" , "keyevent", "KEYCODE_VOLUME_UP"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-            stdout, stderr = run_volume_pluss.communicate()
-            append_output(text=' Volume Key "+" is pressed \n')
-            append_output(stdout)
-            append_output(stderr)
-            run_volume_pluss.wait()      
-        except Exception as e:
-            append_output(f"Error: {str(e)}\n")
-            
+        if selected_device is not None:
+            try:
+                run_volume_pluss = subprocess.Popen(["adb", "-s",selected_device,"shell", "input" , "keyevent", "KEYCODE_VOLUME_UP"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+                stdout, stderr = run_volume_pluss.communicate()
+                append_output(text=' Volume Key "+" is pressed \n')
+                append_output(stdout)
+                append_output(stderr)
+                run_volume_pluss.wait()      
+            except Exception as e:
+                append_output(f"Error: {str(e)}\n")
+        else:
+            print("No ADB device selected.")
+
 def volume_minus():
         volume_minus_thread = threading.Thread(target=run_volume_minus)
         volume_minus_thread.start()
 
 def run_volume_minus():
         global selected_device
-        try:
-            run_volume_minuss = subprocess.Popen(["adb","-s",selected_device,"shell","input","keyevent","KEYCODE_VOLUME_DOWN"], stdout=subprocess.PIPE, stderr=subprocess.PIPE , text=True)
-            stdout, stderr = run_volume_minuss.communicate()
-            append_output(text=' Volume Key "-" is pressed \n')
-            append_output(stdout)
-            append_output(stderr)
-            run_volume_minuss.wait()
-        except Exception as e:
-            append_output(f"Error: {str(e)}\n")
-    
+        if selected_device is not None:
+            try:
+                run_volume_minuss = subprocess.Popen(["adb","-s",selected_device,"shell","input","keyevent","KEYCODE_VOLUME_DOWN"], stdout=subprocess.PIPE, stderr=subprocess.PIPE , text=True)
+                stdout, stderr = run_volume_minuss.communicate()
+                append_output(text='Volume Key "-" is pressed on \n')
+                append_output(stdout)
+                append_output(stderr)
+                run_volume_minuss.wait()
+            except Exception as e:
+                append_output(f"Error: {str(e)}\n")
+        else:
+            print("No ADB device selected.")
+
 def mute():
         mute_thread = threading.Thread(target=run_mute)
         mute_thread.start()
@@ -289,13 +295,13 @@ Activity_controle_frame = ttk.LabelFrame(frame, text="Device Activity",width=200
 Activity_controle_frame.grid(row=2,column=1,pady=1,padx=1)
 
 # My terminal function 
-output_text = customtkinter.CTkTextbox(terminal_frame, width=250 ,height=150)
+output_text = customtkinter.CTkTextbox(terminal_frame, width=350 ,height=150)
 output_text.grid(row=0, column=0,pady=1,padx=1,sticky='nsew')
 
-output_perfo = customtkinter.CTkTextbox(performance_frame, width=250, height=150)
+output_perfo = customtkinter.CTkTextbox(performance_frame, width=350, height=150)
 output_perfo.grid(row=0,column=0,pady=1,padx=1,sticky='nsew')
 
-output_activity = customtkinter.CTkTextbox(Activity_controle_frame, width= 250 , height=150)
+output_activity = customtkinter.CTkTextbox(Activity_controle_frame, width= 350 , height=150)
 output_activity.grid(row=0,column=0,pady=1,padx=1,sticky='nsew')
         
 def append_output(text):
