@@ -71,15 +71,18 @@ def get_connected_adb_devices():
         return []
 
 # Callback function to update the selected device
-def update_selected_device(event):
+def update_selected_device():
     global selected_device
-    selected_device = power_spinbox.get()
+    selected_device = adb_spinbox.get()
+    # debug state to display if we correctly select the target adb devices
+    print(selected_device)
 
 # scrcpy functions 
 def run_adb_top():
+    global selected_device
     try:
         # Run the adb shell top -m 5 command and capture the output
-        adb_command = ["adb", "shell", "top", "-m", "5"]
+        adb_command = ["adb", "-s",selected_device,"shell", "top", "-m", "5"]
         process = subprocess.Popen(adb_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
         stderr = process.communicate()
         append_output(stderr)
@@ -163,8 +166,9 @@ def volume_plus():
         volume_plus_thread.start()
 
 def run_volume_plus():
+        global selected_device
         try:
-            run_volume_pluss = subprocess.Popen(["adb", "shell", "input" , "keyevent", "KEYCODE_VOLUME_UP"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            run_volume_pluss = subprocess.Popen(["adb", "-s",selected_device,"shell", "input" , "keyevent", "KEYCODE_VOLUME_UP"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
             stdout, stderr = run_volume_pluss.communicate()
             append_output(text=' Volume Key "+" is pressed \n')
             append_output(stdout)
@@ -178,8 +182,9 @@ def volume_minus():
         volume_minus_thread.start()
 
 def run_volume_minus():
+        global selected_device
         try:
-            run_volume_minuss = subprocess.Popen(["adb","shell","input","keyevent","KEYCODE_VOLUME_DOWN"], stdout=subprocess.PIPE, stderr=subprocess.PIPE , text=True)
+            run_volume_minuss = subprocess.Popen(["adb","-s",selected_device,"shell","input","keyevent","KEYCODE_VOLUME_DOWN"], stdout=subprocess.PIPE, stderr=subprocess.PIPE , text=True)
             stdout, stderr = run_volume_minuss.communicate()
             append_output(text=' Volume Key "-" is pressed \n')
             append_output(stdout)
@@ -193,8 +198,9 @@ def mute():
         mute_thread.start()
 
 def run_mute():
+        global selected_device
         try:
-            run_mutee = subprocess.Popen(["adb","shell","input","keyevent","KEYCODE_MUTE"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            run_mutee = subprocess.Popen(["adb","-s",selected_device,"shell","input","keyevent","KEYCODE_MUTE"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
             stdout, stderr = run_mutee.communicate()
             append_output(text='You pressed The mute Button\n')
             append_output(stdout)
@@ -313,12 +319,11 @@ mode_switch = ttk.Checkbutton(app_control, text="Mode : Dark/Light ", style="Swi
 mode_switch.grid(row=1,column=0 , sticky="nsew")
 
 connected_devices = get_connected_adb_devices()
-
-power_spinbox = ttk.Spinbox(app_control, values=connected_devices)
-power_spinbox.set('Select Your adb device')  # Set an initial value
-power_spinbox.grid(row=2, column=0, sticky="nsew",pady=5,padx=5)
+adb_spinbox = ttk.Spinbox(app_control, values=connected_devices)
+adb_spinbox.set('Select Your adb device')  # Set an initial value
+adb_spinbox.grid(row=2, column=0, sticky="nsew",pady=5,padx=5)
 # Bind the Spinbox widget to the callback function
-power_spinbox.bind("<<SpinboxSelected>>", update_selected_device)
+adb_spinbox.bind("<<SpinboxSelected>>", update_selected_device)
 
 update_button = ttk.Button(app_control, text="Select Your Adb device", command=update_selected_device)
 update_button.grid(row=3,column=0, sticky="nsew ",pady=5,padx=5)
@@ -345,7 +350,7 @@ b9.grid(row=8,column=0,sticky="ew",pady=1,padx=1)
 # button for script_frame_label are definied Here 
 
 power_spinbox = ttk.Spinbox(power_frame_label, values=('Suspend To Ram', 'Suspend To Disk','Adb Reboot'))
-power_spinbox.set('Select Your Power Transition')  # Set an initial value
+power_spinbox.set("select you power trasistion")  # Set an initial value
 power_spinbox.grid(row=1, column=0, sticky="ew",pady=1,padx=1)
 
 update_button = ttk.Button(power_frame_label, text="Make your Selected Power Transition", command=execute_spinbox_values)
