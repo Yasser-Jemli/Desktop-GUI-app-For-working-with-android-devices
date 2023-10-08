@@ -8,18 +8,13 @@ import customtkinter
 import subprocess
 import threading
 import time
-import ttkbootstrap 
+import ttkbootstrap as ttk
 # Main Window 
 
-root = tk.Tk()
-style = ttk.Style(root)
-root.tk.call("source","forest-light.tcl")
-root.tk.call("source","forest-dark.tcl")
-style.theme_use("forest-dark")
+root = ttk.Window(themename="darkly")
 root.geometry('1024x800')
 # menu
 menu = tk.Menu(root)
-
 
 # sub menu 
 file_menu = tk.Menu(menu, tearoff = False)
@@ -43,8 +38,42 @@ menu.add_cascade(label = 'Help', menu = help_menu)
 # Display the menu
 root.config(menu=menu)
 
+# Main frame
 frame = ttk.Frame(root)
 frame.grid(row=0,column=0)
+
+# initial adb device Value ( Serial Number)
+selected_device = None
+
+def get_connected_adb_devices():
+    try:
+        # Run the adb devices command and capture the output
+        result = subprocess.run(["adb", "devices"], capture_output=True, text=True, check=True)
+
+        # Split the output into lines
+        lines = result.stdout.strip().split("\n")
+
+        # Initialize a list to store the serial numbers of connected devices
+        connected_devices = []
+
+        # Start from the second line (skipping the header "List of devices attached")
+        for line in lines[1:]:
+            parts = line.split()
+            if len(parts) == 2 and parts[1] == "device":
+                # If the line has two parts and the second part is "device," it's a connected device
+                connected_devices.append(parts[0])
+
+        # Return the list of connected device serial numbers
+        return connected_devices
+
+    except subprocess.CalledProcessError as e:
+        print("Error running adb devices:", e)
+        return []
+
+# Callback function to update the selected device
+def update_selected_device(event):
+    global selected_device
+    selected_device = power_spinbox.get()
 
 # scrcpy functions 
 def run_adb_top():
@@ -101,14 +130,18 @@ def list_profiles():
         list_profiles_thread.start()
 
 def run_list_profiles():
-        try:
-            run_profiles = subprocess.Popen(["adb" , "shell", "pm", "list", "users"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-            stdout, stderr =run_profiles.communicate()
-            append_output(stdout)
-            append_output(stderr)
-            run_profiles.wait() 
-        except Exception as e:
-            append_output(f"Error: {str(e)}\n")
+        global selected_device
+        if selected_device is not None:
+            try:
+                run_profiles = subprocess.Popen(["adb" ,"-s",selected_device,"shell", "pm", "list", "users"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+                stdout, stderr =run_profiles.communicate()
+                append_output(stdout)
+                append_output(stderr)
+                run_profiles.wait() 
+            except Exception as e:
+                append_output(f"Error: {str(e)}\n")
+        else:
+            print("No ADB device selected.")
 
 def list_devices():
         list_devices_thread = threading.Thread(target=run_list_devices)
@@ -228,14 +261,7 @@ def execute_spinbox_values():
     elif selected_power == "Suspend To Disk":
          append_output("Suspend To Disk ... 10% ... \n")
     
-# Switch mode  Dark/Light Function 
-
-def toggel_mode(): 
-    if mode_switch.instate(["selected"]):
-        style.theme_use("forest-light")    
-    else:
-        style.theme_use("forest-dark")
-
+    
 # Label for frames are definied Here 
 
 button_frame_label = ttk.LabelFrame(frame,text="My ADB Commands",width=200,height=200)
@@ -272,17 +298,29 @@ def append_output(text):
 def clear_output():
         output_text.delete(1.0, "end")
 
+# Switch mode  Dark/Light Function 
+# still to be fixed with bootstrap theme
+
+def toggel_mode(): 
+    if mode_switch.instate(["selected"]):
+        root.theme_use("superhero")   
+    else:
+        root.theme_use("darkly")
 
 # Settings Button 
 
 mode_switch = ttk.Checkbutton(app_control, text="Mode : Dark/Light ", style="Switch",command=toggel_mode)
 mode_switch.grid(row=1,column=0 , sticky="nsew")
 
-power_spinbox = ttk.Spinbox(app_control, values=('Adb device N°1', 'Adb device N°2','Adb device N°3'))
+connected_devices = get_connected_adb_devices()
+
+power_spinbox = ttk.Spinbox(app_control, values=connected_devices)
 power_spinbox.set('Select Your adb device')  # Set an initial value
 power_spinbox.grid(row=2, column=0, sticky="nsew",pady=5,padx=5)
+# Bind the Spinbox widget to the callback function
+power_spinbox.bind("<<SpinboxSelected>>", update_selected_device)
 
-update_button = ttk.Button(app_control,text="Select Your Adb device", command=execute_spinbox_values)
+update_button = ttk.Button(app_control, text="Select Your Adb device", command=update_selected_device)
 update_button.grid(row=3,column=0, sticky="nsew ",pady=5,padx=5)
 
 # button for the button_frame_label are definied Here 
