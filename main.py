@@ -63,7 +63,8 @@ root.config(menu=menu)
 
 # initial adb device Value ( Serial Number)
 selected_device = None
-
+# intial Process var as None which the Process THat Handels the Performance Command
+process = None  # Initialize process as None
 def get_connected_adb_devices():
     try:
         # Run the adb devices command and capture the output
@@ -94,36 +95,41 @@ def update_selected_device():
     global selected_device
     selected_device = adb_spinbox.get()
     # debug state to display if we correctly select the target adb devices
-    print(selected_device)
+    print("The Selected Device is :",selected_device)
+    append_output(text=f'The Selected Device is : {selected_device}\n')
 
 # scrcpy functions 
 def run_adb_top():
-    global selected_device
-    try:
-        # Run the adb shell top -m 5 command and capture the output
-        adb_command = ["adb", "-s",selected_device,"shell", "top", "-m", "5"]
-        process = subprocess.Popen(adb_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-        stderr = process.communicate()
-        append_output(stderr)
-        # Create a separate thread to continuously read and display the output
-        def display_output():
-            while True:
-                output_line = process.stdout.readline()
-                if not output_line:
-                    break
-                update_perfo_text(output_line)
+    global process
+    if selected_device is not None:
+        try:
+            # Run the adb shell top -m 5 command and capture the output
+            adb_command = ["adb", "-s", selected_device, "shell", "top", "-m", "5"]
+            process = subprocess.Popen(adb_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+            
+            # Create a separate thread to continuously read and display the output
+            def display_output():
+                while True:
+                    output_line = process.stdout.readline()
+                    if not output_line:
+                        break
+                    root.after(10, update_perfo_text, output_line)  # Schedule GUI update
 
-        output_thread = threading.Thread(target=display_output)
-        output_thread.start()
-    except subprocess.CalledProcessError as e:
-        # Handle errors, for example, if adb is not found
-        update_perfo_text(f"Error: {e}")
+            output_thread = threading.Thread(target=display_output)
+            output_thread.start()
+        except subprocess.CalledProcessError as e:
+            # Handle errors, for example, if adb is not found
+            update_perfo_text(f"Error: {e}")
+            
+    else : 
+        messagebox.showerror("Error !","No Adb device was Selected !")
+        
 
 def update_perfo_text(output_line):
     output_perfo.configure(state=tk.NORMAL)
     output_perfo.insert(tk.END, output_line)
     output_perfo.configure(state=tk.DISABLED)
-    output_perfo.see(tk.END)  # Scroll to the end of the text
+    output_perfo.see(tk.END)  
 
 def run_scrcpy():
         global selected_device
@@ -142,7 +148,6 @@ def run_scrcpy():
 
 def start_scrcpy():
         b3.configure(state="disabled")
-
         scrcpy_thread = threading.Thread(target=run_scrcpy)
         scrcpy_thread.start()
        
@@ -296,13 +301,15 @@ def run_reboot():
 def execute_spinbox_values():
     messagebox.showinfo("Feature Not AVailble","This Feature is not yet availble")
     selected_power = power_spinbox.get()
-    if selected_power == 'Adb Reboot':
+    if selected_power == 'ShutDown':
         append_output("Rebooting the Device \n")
-        adb_reboot()
+        append_output("Feature Is Not availble Yet..")
     elif selected_power == 'Suspend To Ram':
         append_output("Suspend To Ram .. 10 % \n")
+        append_output("Feature Is Not availble Yet..")
     elif selected_power == "Suspend To Disk":
          append_output("Suspend To Disk ... 10% ... \n")
+         append_output("Feature Is Not availble Yet..")
     
 def execute_spec_android_tool():
      messagebox.showinfo("Feature Not Availble","This Feature is not yet availble")
@@ -353,21 +360,43 @@ def toggel_mode():
         root.theme_use("darkly")
         messagebox.showinfo("Feature Not AVailble","This Feature is not yet availble")
 
+def update_perfo_toggel():
+    if performance_switch.instate(["selected"]):
+        run_adb_top()
+    else:
+        # check if the Process Thread is running and terminate the process with a Message
+        if process:
+            process.terminate()  # Terminate the running process
+            obj = f'Checking Performance is Stopped on device : {selected_device}\n'           
+            append_output(obj) 
+        else:
+            if selected_device is not None : 
+                messagebox.showinfo("Info","No Checking Performance Thread Is running For the Moment")  
+                update_perfo_text("There's No Checking Performance Process is running")
+            else : 
+                 messagebox.showerror("Error ! " , "No Adb device Was Selected")
 # Settings Button ..
 
 mode_switch = ttk.Checkbutton(app_control, text="Mode : Dark/Light ", style="Switch",command=toggel_mode)
-mode_switch.grid(row=1,column=0 , sticky="ew",pady=1,padx=1)
+mode_switch.grid(row=0,column=0 , sticky="ew",pady=1,padx=1)
+
+# performance Check Button 
+
+performance_switch = ttk.Checkbutton(app_control,text="Check Your Device Performance",style="Switch",command=update_perfo_toggel)
+performance_switch.grid(row=4,column=0,sticky="ew",pady=1,padx=1)
 
 connected_devices = get_connected_adb_devices()
 adb_spinbox = ttk.Spinbox(app_control, values=connected_devices)
 adb_spinbox.set('Select Your adb device')  # Set an initial value
-adb_spinbox.grid(row=2, column=0, sticky="nsew",pady=1,padx=1)
+adb_spinbox.grid(row=1, column=0, sticky="nsew",pady=1,padx=1)
 # Bind the Spinbox widget to the callback function
 adb_spinbox.bind("<<SpinboxSelected>>", update_selected_device)
 
 update_button = ttk.Button(app_control, text="Select Your Target Adb from the List ", command=update_selected_device)
-update_button.grid(row=3,column=0, sticky="nsew ",pady=1,padx=1)
-
+update_button.grid(row=2,column=0, sticky="nsew ",pady=1,padx=1)
+# Switch the Clear button Here in the settings menu for the moment
+b7 = ttk.Button(app_control, text="Clear Terminal",command=clear_output)
+b7.grid(row=3 , column=0 , sticky="ew",pady=1,padx=1)
 # button for the button_frame_label are definied Here 
 
 b1 = ttk.Button(button_frame_label, text=" list _ adb _devices + states ", command=list_devices)
@@ -380,16 +409,14 @@ b5 = ttk.Button(button_frame_label, text=" Volume Up ",command=run_volume_plus)
 b5.grid(row=4 , column=0 , sticky="ew",padx=1,pady=1)
 b6 = ttk.Button(button_frame_label , text=" Volume Down ",command=run_volume_minus)
 b6.grid(row=5 , column=0 , sticky="ew",pady=1,padx=1)
-b7 = ttk.Button(button_frame_label, text="Clear Terminal",command=clear_output)
-b7.grid(row=6 , column=0 , sticky="ew",pady=1,padx=1)
 b8 = ttk.Button(button_frame_label,text=" Bugreport", command=bugreport_generate)
 b8.grid(row=7, column=0 ,sticky="ew",pady=1,padx=1)
-b9 = ttk.Button(button_frame_label, text="Check My device Performance" , command=run_adb_top)
-b9.grid(row=8,column=0,sticky="ew",pady=1,padx=1)
+b4 = ttk.Button(button_frame_label, text="adb_reboot",command=adb_reboot)
+b4.grid(row=8,column=0,sticky="ew",pady=1,padx=1)
 
 # button for script_frame_label are definied Here 
 
-power_spinbox = ttk.Spinbox(power_frame_label, values=('Suspend To Ram', 'Suspend To Disk','Adb Reboot'))
+power_spinbox = ttk.Spinbox(power_frame_label, values=('Suspend To Ram', 'Suspend To Disk','ShutDown'))
 power_spinbox.set("select you power trasistion")  # Set an initial value
 power_spinbox.grid(row=1, column=0, sticky="ew",pady=1,padx=1)
 
