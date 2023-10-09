@@ -1,6 +1,6 @@
 #!/usr/bin/python3.8  
 # Developed By Yasser JEMLi 2023 
-# adding this line #!/usr/bin/python3.8 only to facilaite execution while coding process 
+# adding this line #!/usr/bin/python3.8 only to make execution of same feature easy    
 
 import tkinter as tk 
 from tkinter  import ttk
@@ -94,9 +94,13 @@ def get_connected_adb_devices():
 def update_selected_device():
     global selected_device
     selected_device = adb_spinbox.get()
+    if selected_device == 'Select Your adb device' :
+        selected_device = None 
+        messagebox.showerror("Error","No adb device is Selected \n please Insert & Select and Adb device")
+    else : 
     # debug state to display if we correctly select the target adb devices
-    print("The Selected Device is :",selected_device)
-    append_output(text=f'The Selected Device is : {selected_device}\n')
+        print("The Selected Device is :",selected_device)
+        append_output(text=f'The Selected Device is : {selected_device}\n')
 
 # scrcpy functions 
 def run_adb_top():
@@ -132,6 +136,7 @@ def update_perfo_text(output_line):
     output_perfo.see(tk.END)  
 
 def run_scrcpy():
+        # STill not working Properly with the Selected Device To improve
         global selected_device
         if selected_device is not None:
             scrcpy_process = subprocess.Popen(["scrcpy","-s",selected_device], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
@@ -143,6 +148,7 @@ def run_scrcpy():
                 append_output('Closing scrcpy ........\n')
                 b3.configure(state="normal")
             else  :
+                # Not Handilling if the App is Not Launched , SHall be Fixed Soon 
                 append_output('we encountered issues while trying to launch scrcpy\n')
                 b3.configure(state="normal")
 
@@ -252,7 +258,7 @@ def run_bugreport(output_file="bugreport.txt"):
             append_output("Bugreport Generation In Progress .... 10% ... \n")
             append_output("Please Don't Do anything untill finshing Bugreport Generation...   \n")
         # Start the adb bugreport command
-            run_bugreport_thread = subprocess.Popen(["adb", "bugreport"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            run_bugreport_thread = subprocess.Popen(["adb","-s",selected_device, "bugreport"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         # stdout , stderr = run_bugreport_thread.communicate()
         # append_output(stderr)
         # append_output(stdout)
@@ -288,16 +294,21 @@ def adb_reboot():
     adb_reboot_thread.start()
 
 def run_reboot():
-        try:
-            run_adb_reboot = subprocess.Popen(["adb","reboot"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-            stdout,stderr = run_adb_reboot.communicate()
-            append_output(text='Reboot In Progress .. 20% .. \n')
-            append_output(stdout)
-            append_output(stderr)
-            run_adb_reboot.wait()
-        except Exception as e:
-             append_output(f"Error: {str(e)}\n")
-         
+        global selected_device
+        if selected_device is not None: 
+            try:
+                run_adb_reboot = subprocess.Popen(["adb","reboot"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+                stdout,stderr = run_adb_reboot.communicate()
+                append_output(text='Reboot In Progress .. 20% .. \n')
+                append_output(stdout)
+                append_output(stderr)
+                run_adb_reboot.wait()
+                append_output(text='Reboot Is done')
+            except Exception as e:
+                append_output(f"Error: {str(e)}\n")
+        else:
+            messagebox.showerror("Error ! " , "No Adb device was selected !")
+             
 def execute_spinbox_values():
     messagebox.showinfo("Feature Not AVailble","This Feature is not yet availble")
     selected_power = power_spinbox.get()
@@ -352,12 +363,12 @@ def clear_output():
 
 # Switch mode  Dark/Light Function 
 # still to be fixed with bootstrap theme
+# For the Moment we display an info message of feature Not availble
 
 def toggel_mode(): 
     if mode_switch.instate(["selected"]):
         messagebox.showinfo("Feature Not AVailble","This Feature is not yet availble")
     else:
-        root.theme_use("darkly")
         messagebox.showinfo("Feature Not AVailble","This Feature is not yet availble")
 
 def update_perfo_toggel():
