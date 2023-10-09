@@ -10,17 +10,20 @@ import threading
 import time
 import ttkbootstrap as ttk
 from tkinter import messagebox
-# Main Window 
 
+# Main Window 
 root = ttk.Window(themename="darkly")
 root.geometry('1024x800')
 root.title("My Android Helper ")
 root.iconphoto(True, tk.PhotoImage(file='/home/yasser_jemli/Desktop_GUI_APP_For_Working_With_Android_devices/Untitled.png'))
+
 # menu
 menu = tk.Menu(root)
+
 # Create a notebook to switch between pages
 notebook = ttk.Notebook(root)
 notebook.pack(fill='both', expand=True)
+
 # Main frame
 frame = ttk.Frame(notebook)
 notebook.add(frame)
@@ -58,13 +61,16 @@ menu.add_cascade(label = 'Help', menu = help_menu)
 # add another menu to the main menu, this one should have a sub menu
 # try to read the website below and add a submenu
 # docs: https://www.tutorialspoint.com/python/tk_menu.htm
+
 # Display the menu
 root.config(menu=menu)
 
 # initial adb device Value ( Serial Number)
 selected_device = None
+
 # intial Process var as None which the Process THat Handels the Performance Command
 process = None  # Initialize process as None
+
 def get_connected_adb_devices():
     try:
         # Run the adb devices command and capture the output
@@ -102,7 +108,8 @@ def update_selected_device():
         print("The Selected Device is :",selected_device)
         append_output(text=f'The Selected Device is : {selected_device}\n')
 
-# scrcpy functions 
+# Start The Performance Check Process if we have an adb device selected 
+# if not we throw a messagbox Error That No adb device was Selected
 def run_adb_top():
     global process
     if selected_device is not None:
@@ -128,15 +135,16 @@ def run_adb_top():
     else : 
         messagebox.showerror("Error !","No Adb device was Selected !")
         
-
+# Function For Update The Performance State Of device in the Performance Box 
 def update_perfo_text(output_line):
     output_perfo.configure(state=tk.NORMAL)
     output_perfo.insert(tk.END, output_line)
     output_perfo.configure(state=tk.DISABLED)
     output_perfo.see(tk.END)  
 
+# scrcpy function to launch a sperate Thread of the Selected Device 
 def run_scrcpy():
-        # STill not working Properly with the Selected Device To improve
+        # Now Its working even if we have Multiple Adb devices connected 
         global selected_device
         if selected_device is not None:
             scrcpy_process = subprocess.Popen(["scrcpy","-s",selected_device], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
@@ -145,19 +153,21 @@ def run_scrcpy():
             return_code = scrcpy_process.returncode
             print(return_code)
             if return_code == 0:
-                append_output('Closing scrcpy ........\n')
+                closing_message = f'Closing scrcpy of {selected_device}\n'
+                append_output(closing_message)
                 b3.configure(state="normal")
-            else  :
-                # Not Handilling if the App is Not Launched , SHall be Fixed Soon 
-                append_output('we encountered issues while trying to launch scrcpy\n')
-                b3.configure(state="normal")
+        else :
+                # THis is a fix Of No adb device was selected  
+            append_output('we encountered issues while trying to launch scrcpy\n')
+            b3.configure(state="normal")
 
+# Call the Scrcpy Function with Disabling the Button State For a while Untill 
+# We check if we have an adb device connected or not and decide 
 def start_scrcpy():
         b3.configure(state="disabled")
         scrcpy_thread = threading.Thread(target=run_scrcpy)
         scrcpy_thread.start()
-       
-# our button functions -- adb commands 
+        
 
 def list_profiles():
         list_profiles_thread = threading.Thread(target=run_list_profiles)
@@ -212,6 +222,7 @@ def run_volume_plus():
         else:
             print("No ADB device selected.")
             messagebox.showerror("Error !","No Adb device was Selected !")
+
 def volume_minus():
         volume_minus_thread = threading.Thread(target=run_volume_minus)
         volume_minus_thread.start()
@@ -231,6 +242,7 @@ def run_volume_minus():
         else:
             print("No ADB device selected.")
             messagebox.showerror("Error !","No Adb device was Selected !")
+
 def mute():
         mute_thread = threading.Thread(target=run_mute)
         mute_thread.start()
@@ -282,17 +294,18 @@ def run_bugreport(output_file="bugreport.txt"):
             print("No ADB device selected.")
             messagebox.showerror("Error !","No Adb device was Selected !")
 
-# Your button click event handler function
+# Function TO start the Bugreport_Greneration Thread 
 def bugreport_generate():
     # Start the bugreport process in a separate thread
     bugreport_thread = threading.Thread(target=run_bugreport)
     bugreport_thread.start()
 
-# function for Scripts Button 
+# Function to start the Adb_reboot_Process Thread 
 def adb_reboot():
     adb_reboot_thread = threading.Thread(target=run_reboot)
     adb_reboot_thread.start()
 
+# Callback function to check if we have a selected device to make the reboot or not  
 def run_reboot():
         global selected_device
         if selected_device is not None: 
