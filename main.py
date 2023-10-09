@@ -18,9 +18,26 @@ root.title("My Android Helper ")
 root.iconphoto(True, tk.PhotoImage(file='/home/yasser_jemli/Desktop_GUI_APP_For_Working_With_Android_devices/Untitled.png'))
 # menu
 menu = tk.Menu(root)
+# Create a notebook to switch between pages
+notebook = ttk.Notebook(root)
+notebook.pack(fill='both', expand=True)
+# Main frame
+frame = ttk.Frame(notebook)
+notebook.add(frame)
 
 def missing_feature():
-     messagebox.showinfo("Missing Manuel","This Feature is not availble yet !")
+    # help_frame
+    help_frame = ttk.Frame(notebook)
+    notebook.add(help_frame)
+    notebook.select(help_frame)
+    back_button = ttk.Button(help_frame, text="Back", command=show_main)
+    back_button.pack(pady=20)
+    messagebox.showinfo("Missing Manuel","This Feature is not availble yet !")
+
+def show_main():
+        # Switch back to the main page
+        notebook.select(frame)
+        
 # sub menu 
 file_menu = tk.Menu(menu, tearoff = False)
 file_menu.add_command(label = 'How To configure CAN _ bus',background='green', command =missing_feature)
@@ -41,14 +58,8 @@ menu.add_cascade(label = 'Help', menu = help_menu)
 # add another menu to the main menu, this one should have a sub menu
 # try to read the website below and add a submenu
 # docs: https://www.tutorialspoint.com/python/tk_menu.htm
-
-
 # Display the menu
 root.config(menu=menu)
-
-# Main frame
-frame = ttk.Frame(root)
-frame.grid(row=0,column=0)
 
 # initial adb device Value ( Serial Number)
 selected_device = None
@@ -293,17 +304,19 @@ def execute_spinbox_values():
     elif selected_power == "Suspend To Disk":
          append_output("Suspend To Disk ... 10% ... \n")
     
-    
+def execute_spec_android_tool():
+     messagebox.showinfo("Feature Not Availble","This Feature is not yet availble")
+                            
 # Label for frames are definied Here 
-
-button_frame_label = ttk.LabelFrame(frame,text="My ADB Commands",width=200,height=200)
-button_frame_label.grid(row=2, column=0,padx=1,pady=1)
 
 power_frame_label = ttk.LabelFrame(frame,text="My Power Transistions",width=200,height=200)
 power_frame_label.grid(row=0, column=0,padx=1,pady=1)
 
 app_control = ttk.LabelFrame(frame, text="Settings",width=200,height=200)
 app_control.grid(row=1,column=0,pady=1,padx=1)
+
+button_frame_label = ttk.LabelFrame(frame,text="My ADB Commands",width=200,height=200)
+button_frame_label.grid(row=2, column=0,padx=1,pady=1)
 
 terminal_frame = ttk.LabelFrame(frame, text="My terminal", width=200,height=200)
 terminal_frame.grid(row=0,column=1,padx=1,pady=1)
@@ -340,20 +353,20 @@ def toggel_mode():
         root.theme_use("darkly")
         messagebox.showinfo("Feature Not AVailble","This Feature is not yet availble")
 
-# Settings Button 
+# Settings Button ..
 
 mode_switch = ttk.Checkbutton(app_control, text="Mode : Dark/Light ", style="Switch",command=toggel_mode)
-mode_switch.grid(row=1,column=0 , sticky="nsew")
+mode_switch.grid(row=1,column=0 , sticky="ew",pady=1,padx=1)
 
 connected_devices = get_connected_adb_devices()
 adb_spinbox = ttk.Spinbox(app_control, values=connected_devices)
 adb_spinbox.set('Select Your adb device')  # Set an initial value
-adb_spinbox.grid(row=2, column=0, sticky="nsew",pady=5,padx=5)
+adb_spinbox.grid(row=2, column=0, sticky="nsew",pady=1,padx=1)
 # Bind the Spinbox widget to the callback function
 adb_spinbox.bind("<<SpinboxSelected>>", update_selected_device)
 
-update_button = ttk.Button(app_control, text="Select Your Adb device", command=update_selected_device)
-update_button.grid(row=3,column=0, sticky="nsew ",pady=5,padx=5)
+update_button = ttk.Button(app_control, text="Select Your Target Adb from the List ", command=update_selected_device)
+update_button.grid(row=3,column=0, sticky="nsew ",pady=1,padx=1)
 
 # button for the button_frame_label are definied Here 
 
@@ -383,6 +396,11 @@ power_spinbox.grid(row=1, column=0, sticky="ew",pady=1,padx=1)
 update_button = ttk.Button(power_frame_label, text="Make your Selected Power Transition", command=execute_spinbox_values)
 update_button.grid(row=2,column=0, sticky="nsew ",pady=1,padx=1)
 
-     
+Spec_android_tools = ttk.Spinbox(power_frame_label,values=('Volume_up','Volume_down','specifique_reboot'))
+Spec_android_tools.set("Select your action")
+Spec_android_tools.grid(row=3,column=0,sticky="ew",pady=1,padx=1)
+# to add spec function to handle the Soec_android_tools actions
+update_button2 = ttk.Button(power_frame_label,text="Select Your action",command=execute_spec_android_tool)
+update_button2.grid(row=4,column=0,sticky='nsew',pady=1,padx=1)
 # Window Loop 
 root.mainloop()
