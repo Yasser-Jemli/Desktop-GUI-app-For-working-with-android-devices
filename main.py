@@ -314,13 +314,13 @@ def execute_spinbox_values():
     selected_power = power_spinbox.get()
     if selected_power == 'ShutDown':
         append_output("Rebooting the Device \n")
-        append_output("Feature Is Not availble Yet..")
+        append_output("Feature Is Not availble Yet..\n")
     elif selected_power == 'Suspend To Ram':
         append_output("Suspend To Ram .. 10 % \n")
-        append_output("Feature Is Not availble Yet..")
+        append_output("Feature Is Not availble Yet..\n")
     elif selected_power == "Suspend To Disk":
          append_output("Suspend To Disk ... 10% ... \n")
-         append_output("Feature Is Not availble Yet..")
+         append_output("Feature Is Not availble Yet..\n")
     
 def execute_spec_android_tool():
      messagebox.showinfo("Feature Not Availble","This Feature is not yet availble")
