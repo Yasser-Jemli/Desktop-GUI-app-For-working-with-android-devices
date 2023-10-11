@@ -147,6 +147,7 @@ def run_scrcpy():
         # Now Its working even if we have Multiple Adb devices connected 
         global selected_device
         if selected_device is not None:
+            append_output(f'Launching Scrcpy On {selected_device}\n')
             scrcpy_process = subprocess.Popen(["scrcpy","-s",selected_device], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
             scrcpy_process.wait()  # Wait for the process to finish
 
@@ -156,9 +157,14 @@ def run_scrcpy():
                 closing_message = f'Closing scrcpy of {selected_device}\n'
                 append_output(closing_message)
                 b3.configure(state="normal")
+            else : 
+                append_output('we encountered issues while trying to launch scrcpy\n')
+                b3.configure(state="normal")
+
         else :
-                # THis is a fix Of No adb device was selected  
-            append_output('we encountered issues while trying to launch scrcpy\n')
+            # This is a fix Of No adb device was selected  
+            append_output('No Adb device was Selected\n')
+            messagebox.showerror("Error !","No Adb device was Selected")
             b3.configure(state="normal")
 
 # Call the Scrcpy Function with Disabling the Button State For a while Untill 
