@@ -13,7 +13,7 @@ from tkinter import messagebox
 
 # Main Window 
 root = ttk.Window(themename="darkly")
-root.geometry('1024x800')
+root.geometry('1366x768')
 root.title("My Android Helper ")
 root.iconphoto(True, tk.PhotoImage(file='/home/yasser_jemli/Desktop_GUI_APP_For_Working_With_Android_devices/Untitled.png'))
 
@@ -68,7 +68,7 @@ root.config(menu=menu)
 # initial adb device Value ( Serial Number)
 selected_device = None
 
-# intial Process var as None which the Process THat Handels the Performance Command
+# intial Process var as None which is the Process THat Handels the Performance Command
 process = None  # Initialize process as None
 
 def get_connected_adb_devices():
@@ -266,6 +266,10 @@ def run_mute():
 def run_bugreport(output_file="bugreport.txt"):
     global selected_device
     if selected_device is not None:
+    # Showing Information To the User about Bugreport Generation Process
+    # If the Target Device Selected has an old Android Version it will Generate A txt File as Bugreport
+    # If The Target Device has a New Android version it will Generate a zip file as bugreport 
+        messagebox.showinfo("Info","If you're Using older android version you will have a txt file as a bugreport , if not You will find a Zip File As a bug report ")
         try:
             append_output("Bugreport Generation In Progress .... 10% ... \n")
             append_output("Please Don't Do anything untill finshing Bugreport Generation...   \n")
