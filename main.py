@@ -140,8 +140,10 @@ def update_perfo_text(output_line):
     output_perfo.configure(state=tk.NORMAL)
     output_perfo.insert(tk.END, output_line)
     output_perfo.configure(state=tk.DISABLED)
-    output_perfo.see(tk.END)  
-
+    output_perfo.see(tk.END)
+# Add function to clear the Performance text zone   
+def clear_output_perfo():
+        output_perfo.delete(1.0, "end")
 # scrcpy function to launch a sperate Thread of the Selected Device 
 def run_scrcpy():
         # Now Its working even if we have Multiple Adb devices connected 
@@ -402,7 +404,7 @@ def update_perfo_toggel():
         if process:
             process.terminate()  # Terminate the running process
             obj = f'Checking Performance is Stopped on device : {selected_device}\n'           
-            append_output(obj) 
+            update_perfo_text(obj) 
         else:
             if selected_device is not None : 
                 messagebox.showinfo("Info","No Checking Performance Thread Is running For the Moment")  
@@ -419,6 +421,11 @@ mode_switch.grid(row=0,column=0 , sticky="ew",pady=1,padx=1)
 performance_switch = ttk.Checkbutton(app_control,text="Check Your Device Performance",style="Switch",command=update_perfo_toggel)
 performance_switch.grid(row=4,column=0,sticky="ew",pady=1,padx=1)
 
+# clear the Performance Check text Box 
+
+clear_button = ttk.Button(app_control,text="Clear Performance Terminal",command=clear_output_perfo)
+clear_button.grid(row=5,column=0,sticky='ew',pady=1,padx=1)
+
 connected_devices = get_connected_adb_devices()
 adb_spinbox = ttk.Spinbox(app_control, values=connected_devices)
 adb_spinbox.set('Select Your adb device')  # Set an initial value
@@ -433,7 +440,7 @@ b7 = ttk.Button(app_control, text="Clear Terminal",command=clear_output)
 b7.grid(row=3 , column=0 , sticky="ew",pady=1,padx=1)
 # button for the button_frame_label are definied Here 
 
-b1 = ttk.Button(button_frame_label, text=" list _ adb _devices + states ", command=list_devices)
+b1 = ttk.Button(button_frame_label, text="        list _ adb _devices + states     ", command=list_devices)
 b1.grid(row=1 , column=0 , sticky="ew",pady=1,padx=1)
 b2 = ttk.Button(button_frame_label , text=" list _ profiles ", command=list_profiles)
 b2.grid(row=2 , column=0 , sticky="ew",pady=1, padx=1)
