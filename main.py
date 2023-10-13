@@ -422,10 +422,12 @@ performance_switch = ttk.Checkbutton(app_control,text="Check Your Device Perform
 performance_switch.grid(row=4,column=0,sticky="ew",pady=1,padx=1)
 
 # clear the Performance Check text Box 
-
+# bug here it's not clearing the performance screen 
 clear_button = ttk.Button(app_control,text="Clear Performance Terminal",command=clear_output_perfo)
 clear_button.grid(row=5,column=0,sticky='ew',pady=1,padx=1)
 
+# Here we have a bug , the refresh is not happend for the adb devices 
+# Need to Be fixed Soon 
 connected_devices = get_connected_adb_devices()
 adb_spinbox = ttk.Spinbox(app_control, values=connected_devices)
 adb_spinbox.set('Select Your adb device')  # Set an initial value
