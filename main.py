@@ -15,7 +15,8 @@ from tkinter import messagebox
 root = ttk.Window(themename="darkly")
 root.geometry('1366x768')
 root.title("My Android Helper ")
-root.iconphoto(True, tk.PhotoImage(file='/home/yasser_jemli/Desktop_GUI_APP_For_Working_With_Android_devices/Untitled.png'))
+# to fix this with variable Path 
+# root.iconphoto(True, tk.PhotoImage(file='/home/yasser_jemli/Desktop_GUI_APP_For_Working_With_Android_devices/Untitled.png'))
 
 # menu
 menu = tk.Menu(root)
