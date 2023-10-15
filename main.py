@@ -16,6 +16,18 @@ import os
 root = ttk.Window(themename="darkly")
 root.geometry('1366x768')
 root.title("My Android Helper ")
+# add a fix for changing screen resolution 
+# we shall control the changes of the screen resolution from pc to another to fix this 
+
+width = root.winfo_screenwidth()
+height = root.winfo_screenheight()
+print(width,height)
+configuration = f'{width}x{height}'
+print(configuration)
+
+# i add this fix but i should test it with different screen size to confirm if it's working or not 
+root.geometry(configuration) # this workaround didn't fix the issue : we shall fix it soon 
+
 # to fix this with variable Path 
 image_var= 'Untitled.png' 
 absolute_path =  os.path.join(os.getcwd(),image_var)
