@@ -10,13 +10,17 @@ import threading
 import time
 import ttkbootstrap as ttk
 from tkinter import messagebox
+import os 
 
 # Main Window 
 root = ttk.Window(themename="darkly")
 root.geometry('1366x768')
 root.title("My Android Helper ")
 # to fix this with variable Path 
-# root.iconphoto(True, tk.PhotoImage(file='/home/yasser_jemli/Desktop_GUI_APP_For_Working_With_Android_devices/Untitled.png'))
+image_var= 'Untitled.png' 
+absolute_path =  os.path.join(os.getcwd(),image_var)
+print(f'this is the path : {absolute_path}') # debug statement that the Path is correctly selected
+root.iconphoto(True, tk.PhotoImage(file=absolute_path))
 
 # menu
 menu = tk.Menu(root)
