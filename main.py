@@ -1,6 +1,6 @@
 #!/usr/bin/python3.8  
 # Developed By Yasser JEMLi 2023 
-# adding this line #!/usr/bin/python3.8 only to make execution of same feature easy    
+# adding this line #!/usr/bin/python3.8 only to make execution of spec feature easy    
 
 import tkinter as tk 
 from tkinter  import ttk
@@ -13,7 +13,8 @@ from tkinter import messagebox
 import os 
 
 # Main Window 
-root = ttk.Window(themename="darkly")
+root = ttk.Window()
+style = ttk.Style
 root.geometry('1366x768')
 root.title("My Android Helper ")
 # add a fix for changing screen resolution 
@@ -388,13 +389,13 @@ Activity_controle_frame = ttk.LabelFrame(frame, text="Device Activity",width=200
 Activity_controle_frame.grid(row=2,column=1,pady=1,padx=1)
 
 # My terminal function 
-output_text = customtkinter.CTkTextbox(terminal_frame, width=350 ,height=150)
+output_text = customtkinter.CTkTextbox(terminal_frame,fg_color='white',text_color='black', width=350 ,height=150)
 output_text.grid(row=0, column=0,pady=1,padx=1,sticky='nsew')
 
-output_perfo = customtkinter.CTkTextbox(performance_frame, width=350, height=150)
+output_perfo = customtkinter.CTkTextbox(performance_frame,fg_color='white',text_color='black',width=350, height=150)
 output_perfo.grid(row=0,column=0,pady=1,padx=1,sticky='nsew')
 
-output_activity = customtkinter.CTkTextbox(Activity_controle_frame, width= 350 , height=150)
+output_activity = customtkinter.CTkTextbox(Activity_controle_frame, width= 350 ,fg_color='white',text_color='black', height=150)
 output_activity.grid(row=0,column=0,pady=1,padx=1,sticky='nsew')
         
 def append_output(text):
@@ -409,9 +410,11 @@ def clear_output():
 
 def toggel_mode(): 
     if mode_switch.instate(["selected"]):
-        messagebox.showinfo("Feature Not AVailble","This Feature is not yet availble")
+        style.theme_use(themename='darkly')
+        # messagebox.showinfo("Feature Not AVailble","This Feature is not yet availble")
     else:
-        messagebox.showinfo("Feature Not AVailble","This Feature is not yet availble")
+        style.theme_use(themename='sandstone')
+        # messagebox.showinfo("Feature Not AVailble","This Feature is not yet availble")
 
 def update_perfo_toggel():
     if performance_switch.instate(["selected"]):
