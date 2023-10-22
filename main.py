@@ -15,7 +15,7 @@ import os
 # Main Window 
 root = ttk.Window()
 style = ttk.Style
-root.geometry('1366x768')
+
 root.title("My Android Helper ")
 # add a fix for changing screen resolution 
 # we shall control the changes of the screen resolution from pc to another to fix this 
@@ -34,6 +34,8 @@ image_var= 'Untitled.png'
 absolute_path =  os.path.join(os.getcwd(),image_var)
 print(f'this is the path : {absolute_path}') # debug statement that the Path is correctly selected
 root.iconphoto(True, tk.PhotoImage(file=absolute_path))
+
+root.tk.call('tk','scaling',2.0)
 
 # menu
 menu = tk.Menu(root)
