@@ -40,26 +40,26 @@ root.tk.call('tk','scaling',2.0)
 # menu
 menu = tk.Menu(root)
 
-# Create a notebook to switch between pages
-notebook = ttk.Notebook(root)
-notebook.pack(fill='both', expand=True)
+
 
 # Main frame
-frame = ttk.Frame(notebook)
-notebook.add(frame)
+frame = ttk.Frame(root)
+frame.grid(row=0,column=0)
+help_frame = ttk.Frame(root)
 
 def missing_feature():
     # help_frame
-    help_frame = ttk.Frame(notebook)
-    notebook.add(help_frame)
-    notebook.select(help_frame)
+    frame.grid_forget()
+    help_frame.grid(row=0,column=0)
     back_button = ttk.Button(help_frame, text="Back", command=show_main)
     back_button.pack(pady=20)
     messagebox.showinfo("Missing Manuel","This Feature is not availble yet !")
 
 def show_main():
         # Switch back to the main page
-        notebook.select(frame)
+        help_frame.grid_forget()
+        frame.grid()
+        
         
 # sub menu 
 file_menu = tk.Menu(menu, tearoff = False)
@@ -213,7 +213,7 @@ def run_list_profiles():
             except Exception as e:
                 append_output(f"Error: {str(e)}\n")
         else:
-            print("No ADB device selected.")
+            append_output("No Adb device was Selected !")
             messagebox.showerror("Error !","No Adb device was Selected !")
             
 def list_devices():
@@ -248,7 +248,7 @@ def run_volume_plus():
             except Exception as e:
                 append_output(f"Error: {str(e)}\n")
         else:
-            print("No ADB device selected.")
+            append_output("No Adb device was selected !")
             messagebox.showerror("Error !","No Adb device was Selected !")
 
 def volume_minus():
@@ -268,7 +268,7 @@ def run_volume_minus():
             except Exception as e:
                 append_output(f"Error: {str(e)}\n")
         else:
-            print("No ADB device selected.")
+            append_output("No Adb device was selected !")
             messagebox.showerror("Error !","No Adb device was Selected !")
 
 def mute():
