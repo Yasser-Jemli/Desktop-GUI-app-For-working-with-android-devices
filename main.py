@@ -405,10 +405,13 @@ output_activity = customtkinter.CTkTextbox(Activity_controle_frame, width= 350 ,
 output_activity.grid(row=0,column=0,pady=1,padx=1,sticky='nsew')
         
 def append_output(text):
+        output_text.configure(state=tk.NORMAL)
         output_text.insert("end", text)
+        output_text.configure.see(tk.END)
 
 def clear_output():
         output_text.delete(1.0, "end")
+        output_text.configure(state=tk.DISABLED)
 
 # Switch mode  Dark/Light Function 
 # still to be fixed with bootstrap theme
