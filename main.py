@@ -29,7 +29,7 @@ print(configuration)
 # i add this fix but i should test it with different screen size to confirm if it's working or not 
 root.geometry(configuration) # this workaround didn't fix the issue : we shall fix it soon 
 
-# to fix this with variable Path 
+# Fix png icon app with absolute path 
 image_var= 'Untitled.png' 
 absolute_path =  os.path.join(os.getcwd(),image_var)
 print(f'this is the path : {absolute_path}') # debug statement that the Path is correctly selected
@@ -161,9 +161,13 @@ def update_perfo_text(output_line):
     output_perfo.insert(tk.END, output_line)
     output_perfo.configure(state=tk.DISABLED)
     output_perfo.see(tk.END)
+
 # Add function to clear the Performance text zone   
 def clear_output_perfo():
+        output_perfo.configure(state=tk.NORMAL)
         output_perfo.delete(1.0, "end")
+        output_perfo.configure(state=tk.DISABLED)
+
 # scrcpy function to launch a sperate Thread of the Selected Device 
 def run_scrcpy():
         # Now Its working even if we have Multiple Adb devices connected 
