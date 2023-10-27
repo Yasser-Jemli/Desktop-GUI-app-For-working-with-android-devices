@@ -420,7 +420,7 @@ def clear_output():
 # Switch mode  Dark/Light Function 
 # still to be fixed with bootstrap theme
 # For the Moment we display an info message of feature Not availble
-
+# here we should check how to fix this with bootstrap theme
 def toggel_mode(): 
     if mode_switch.instate(["selected"]):
         style.theme_use(themename='darkly')
@@ -455,7 +455,8 @@ performance_switch = ttk.Checkbutton(app_control,text="Check Your Device Perform
 performance_switch.grid(row=5,column=0,sticky="ew",pady=1,padx=1)
 
 # clear the Performance Check text Box 
-# bug here => the button is not clearing the performance screen 
+# bug here => the button is not clearing the performance screen
+# The bug is fixed but we need to implement thread to clear the output_perfo terminal  
 clear_button = ttk.Button(app_control,text="Clear Performance Terminal",command=clear_output_perfo)
 clear_button.grid(row=6,column=0,sticky='ew',pady=1,padx=1)
 
