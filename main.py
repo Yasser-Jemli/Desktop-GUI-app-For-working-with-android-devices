@@ -299,7 +299,7 @@ def run_mute():
             except Exception as e:
                 append_output(f"Error: {str(e)}\n")
         else:
-            messagebox.showerror("Error !","No Adb device was Selected !")
+            messagebox.showerror("Error !","No Adb device Was Selected !")
             print("No ADB device selected.")
             
 
