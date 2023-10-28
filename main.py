@@ -1,6 +1,6 @@
 #!/usr/bin/python3.8  
 # Developed By Yasser JEMLi 2023 
-# adding this line #!/usr/bin/python3.8 only to make execution of spec feature easy    
+# adding this line #!/usr/bin/python3.8 only to make execution of specific feature easy    
 
 import tkinter as tk 
 from tkinter  import ttk
