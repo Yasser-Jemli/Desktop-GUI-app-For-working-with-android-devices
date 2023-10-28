@@ -221,8 +221,9 @@ def run_list_profiles():
             except Exception as e:
                 append_output(f"Error: {str(e)}\n")
         else:
-            append_output("No Adb device was Selected !")
             messagebox.showerror("Error !","No Adb device was Selected !")
+            append_output("No Adb device was Selected !")
+            
             
 def list_devices():
         list_devices_thread = threading.Thread(target=run_list_devices)
@@ -256,8 +257,9 @@ def run_volume_plus():
             except Exception as e:
                 append_output(f"Error: {str(e)}\n")
         else:
-            append_output("No Adb device was selected !")
             messagebox.showerror("Error !","No Adb device was Selected !")
+            append_output("No Adb device was selected !")
+            
 
 def volume_minus():
         volume_minus_thread = threading.Thread(target=run_volume_minus)
@@ -276,8 +278,9 @@ def run_volume_minus():
             except Exception as e:
                 append_output(f"Error: {str(e)}\n")
         else:
-            append_output("No Adb device was selected !")
             messagebox.showerror("Error !","No Adb device was Selected !")
+            append_output("No Adb device was selected !")
+            
 
 def mute():
         mute_thread = threading.Thread(target=run_mute)
@@ -296,8 +299,9 @@ def run_mute():
             except Exception as e:
                 append_output(f"Error: {str(e)}\n")
         else:
-            print("No ADB device selected.")
             messagebox.showerror("Error !","No Adb device was Selected !")
+            print("No ADB device selected.")
+            
 
 def run_bugreport(output_file="bugreport.txt"):
     global selected_device
