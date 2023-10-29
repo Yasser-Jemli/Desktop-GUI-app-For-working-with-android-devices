@@ -415,7 +415,7 @@ output_activity.grid(row=0,column=0,pady=1,padx=1,sticky='nsew')
 def append_output(text):
         output_text.configure(state=tk.NORMAL)
         output_text.insert("end", text)
-        output_text.configure.see(tk.END)
+        output_text.configure(tk.END)
 
 def clear_output():
         output_text.delete(1.0, "end")
